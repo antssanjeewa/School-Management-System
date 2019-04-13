@@ -81,17 +81,14 @@
             items: [
             { icon: 'dashboard', text: 'Dashboard', link:'/'},
             { icon: 'folder', text: 'Attendent Mark', link:'/attendant' },
-            { icon: 'person', text: 'View Childrens', link:'/childs' },   
+            { icon: 'person', text: 'Add Marks', link:'/childs' },   
             { icon: 'keyboard_arrow_up',
               'icon-alt': 'keyboard_arrow_down',
               text: 'Childrens',
               model: true,
               children: [
                 { icon: 'how_to_vote', text: 'Child List', link:'/childs' },   
-                { icon: 'account_balance', text: 'Child Register', link:'/childs/reg'},
-                { icon: 'credit_card', text: 'Child', link:'/donation_methods'},
-                { icon: 'room', text: 'Donation Place', link:'/donation_places'},
-                { icon: 'location_on', text: 'Donation Place Name', link:'/donation_place_names'},
+                { icon: 'account_balance', text: 'Child Register', link:'/childs/add'},
                 
               ]
             },
@@ -101,19 +98,17 @@
               text: 'Teachers',
               model: false,
               children: [
-                { icon: 'list_alt', text: 'State', link:'/states'},
-                { icon: 'contact_support', text: 'How To', link:'/how_to'},
-                { icon: 'settings_input_antenna', text: 'SMN Broadcasting', link:'/smn_broadcastings'},
-                { icon: 'settings_input_antenna', text: 'Standing Order', link:'/standing_orders'},
+                { icon: 'settings_input_antenna', text: 'Teacher List', link:'/smn_broadcastings'},
+                { icon: 'settings_input_antenna', text: 'Teacher Add', link:'/standing_orders'},
               ]
             },
             { icon: 'keyboard_arrow_up',
               'icon-alt': 'keyboard_arrow_down',
-              text: 'More',
+              text: 'Other',
               model: false,
               children: [
-                { icon: 'my_location', text: 'District', link:'/districts'},
-                { icon: 'airplanemode_active', text: 'Country', link:'/countries'},
+                { icon: 'my_location', text: 'Add Subject', link:'/districts'},
+                { icon: 'airplanemode_active', text: 'Add Class', link:'/countries'},
               ]
             },
     

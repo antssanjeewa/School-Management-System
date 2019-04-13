@@ -1,9 +1,9 @@
-// get all users in database
-export const set_users = ({commit}) => {
+// get all childrens in database
+export const set_childrens = ({commit}) => {
     return new Promise((resolve, reject) => {
-        axios.get('api/users').then(response => {
+        axios.get('api/childrens').then(response => {
             // http success, call the mutator and change something in state
-            commit('set_all_users', response.data.data)
+            commit('set_all_childrens', response.data.data)
             resolve(response);  // Let the calling function know that http is done. You may send some data back
         }, error => {
             // http failed, let the calling function know that action did not work out
@@ -12,28 +12,28 @@ export const set_users = ({commit}) => {
     })
 }
 
-// add new user to the database
-export const add_new_user = ({dispatch}, user) => {
-    return axios.post('api/users',user) .then( response => {
+// add new children to the database
+export const add_new_children = ({dispatch}, children) => {
+    return axios.post('api/childrens',children) .then( response => {
             dispatch('set_message',{message:response.data.message, type:'success'},{root:true})
-            dispatch('set_users')
+            dispatch('set_childrens')
         }).catch(error => {
             dispatch('set_message',{message:error.response.data.message, type:'error'},{root:true})
         });
 }
 
-// set edit user array
-export const set_edit_user = ({commit}, user={}) => {
+// set edit children array
+export const set_edit_children = ({commit}, children={}) => {
 
-    return commit('set_update_user_to_form',user)
+    return commit('set_update_children_to_form',children)
 }
 
-// update existing user in database
-export const update_user = ({dispatch}, user) => {
+// update existing children in database
+export const update_children = ({dispatch}, children) => {
     return new Promise((resolve, reject) => {
-        axios.post('api/users/update',user).then(response => {
+        axios.post('api/childrens/update',children).then(response => {
             // http success, call the mutator and change something in state
-            dispatch('set_users')
+            dispatch('set_childrens')
             dispatch('set_message',{message:response.data.message, type:'success'},{root:true})
             resolve(response);  // Let the calling function know that http is done. You may send some data back
         }, error => {
@@ -44,12 +44,12 @@ export const update_user = ({dispatch}, user) => {
     })
 }
 
-// set user details
-export const set_user_details = ({commit}, id) => {
+// set children details
+export const set_children_details = ({commit}, id) => {
     return new Promise((resolve, reject) => {
-        axios.get('api/users/'+id).then(response => {
+        axios.get('api/childrens/'+id).then(response => {
             // http success, call the mutator and change something in state
-            commit('set_active_user',response.data.user)
+            commit('set_active_children',response.data.children)
             resolve(response);  // Let the calling function know that http is done. You may send some data back
         }, error => {
             // http failed, let the calling function know that action did not work out

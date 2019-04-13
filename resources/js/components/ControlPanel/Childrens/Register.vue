@@ -1,8 +1,7 @@
 <template>
-    <v-dialog v-model="dialog" persistent scrollable :fullscreen="expand" :width="formwidth">
-      <v-card>
+    <v-card>
         <v-toolbar card dark color="primary">
-          <v-toolbar-title> {{ formTitle }} Register form</v-toolbar-title>
+          <v-toolbar-title> {{ formTitle }} Child Register</v-toolbar-title>
             <v-spacer></v-spacer>
             <!-- top add person icon -->
             <v-tooltip bottom>
@@ -11,7 +10,7 @@
                   <v-icon large>person_add</v-icon>
                 </v-btn>
               </template>
-              <span> Add New Person</span>
+              <span> Add New Child</span>
             </v-tooltip>
             <v-btn icon dark @click="cancel">
               <v-icon>close</v-icon>
@@ -33,15 +32,6 @@
                               alt=""
                             >
                           </v-avatar>
-                          <v-spacer></v-spacer>
-                          <v-flex xs2 md1>
-                            <v-select
-                              :items="titles"
-                              label="Title"
-                              v-model="user.title"
-                            >
-                            </v-select>
-                          </v-flex>
                           <v-spacer></v-spacer>
                           <v-flex xs12 md4>
                             <v-text-field 
@@ -66,31 +56,20 @@
                         </v-layout>
                       </v-flex>
           
-                      <v-flex xs1>
-          
-                      </v-flex>
-          
                       <v-flex xs12 md6>
                         <v-text-field
-                          type="tel"
                           name="mobile01"
                           prepend-icon="smartphone"
-                          label="Mobile 01"
-                          mask="phone"
+                          label="Birth Day"
                           :rules="rules.required"
                           v-model="user.mobile01"
                         ></v-text-field>
                       </v-flex>
-                  <!-- --------  Other Information  ----------------------------- -->
-                      <v-flex xs12>
-                        <v-subheader>Other Information</v-subheader>
-                        <v-divider></v-divider>
-                      </v-flex>
-          
+
                       <v-flex xs6>
                         <v-text-field
                           prepend-icon="mail"
-                          label="Email"
+                          label="Gender"
                           v-model="user.email"
                         ></v-text-field>
                       </v-flex>
@@ -98,17 +77,24 @@
                       <v-flex xs6>
                         <v-text-field
                           prepend-icon="lock"
-                          label="NIC"
+                          label="Address"
                           type="text"
                           v-model="user.nic"
                         ></v-text-field>
                       </v-flex>
                       <v-flex xs6>
                         <v-text-field
+                          prepend-icon="smartphone"
+                          label="Class Room"
+                          v-model="user.mobile02"
+                        ></v-text-field>
+                      </v-flex>
+                      
+                      <v-flex xs6>
+                        <v-text-field
                           prepend-icon="phone"
-                          label="Landline"
+                          label="Parent Name"
                           type ="text"
-                          mask="phone"
                           v-model="user.landline"
                         ></v-text-field>
                       </v-flex>
@@ -117,139 +103,16 @@
                         <v-text-field
                           type="tel"
                           prepend-icon="smartphone"
-                          label="Mobile 02"
+                          label="Contact Number"
                           mask="phone"
                           v-model="user.mobile02"
                         ></v-text-field>
                       </v-flex>
-                      <!-- ------  Address  ------------------------------- -->
-                      <v-flex xs12>
-                        <v-subheader>Where do you live?</v-subheader>
-                        <v-divider></v-divider>
-                      </v-flex>
-                      <v-flex xs6>
-                        <v-text-field
-                          prepend-icon="home"
-                          label="Address 01"
-                          v-model="user.address.address01"
-                        ></v-text-field>
-                      </v-flex>
-                      <v-flex xs6>
-                        <v-text-field
-                          prepend-icon="place"
-                          label="Address 02"
-                          v-model="user.address.address02"
-                        ></v-text-field>
-                      </v-flex>
-                      <v-flex xs6>
-                        <v-text-field
-                          prepend-icon="place"
-                          label="City"
-                          v-model="user.address.city"
-                        ></v-text-field>
-                      </v-flex>
-                      <!-- Country -->
-                      <v-flex xs6>
-                        <v-text-field
-                          prepend-icon="place"
-                          label="Country"
-                          v-model="user.country"
-                        ></v-text-field>
-                      </v-flex>
-                    </v-layout>
-                  </v-flex>
-                  <v-divider class="mx-4" inset vertical v-if="expand"></v-divider>
-                  <!-- --------- Expanded Information  ---------------------------- -->
-                  <v-flex xs6 v-if="expand">
-                    <v-layout row wrap>
-                      <v-flex xs12 align-center justify-space-between>
-                        <v-flex xs12 md6>
-                          <v-text-field 
-                            name="info01" 
-                            label="Info01" 
-                            type="color"
-                          >
-                          </v-text-field>
-                        </v-flex>
-                        <v-flex xs12 md6>
-                          <v-text-field 
-                            name="info02" 
-                            label="info02" 
-                            type="time"
-                          >
-                          </v-text-field>
-                        </v-flex>
-                      </v-flex>
-                      <v-flex xs6>
-                        <v-text-field
-                          type="tel"
-                          prepend-icon="smartphone"
-                          label="info03"
-                        ></v-text-field>
-                      </v-flex>
-                  <!-- --------  Other Information  ----------------------------- -->
-                      <v-flex xs12>
-                        <v-subheader>Other Information</v-subheader>
-                        <v-divider></v-divider>
-                      </v-flex>
-          
-                      <v-flex xs12>
-                        <v-text-field
-                          prepend-icon="mail"
-                          label="info04"
-                        ></v-text-field>
-                      </v-flex>
-          
-                      <v-flex xs12>
-                        <v-text-field
-                          prepend-icon="lock"
-                          label="info06"
-                          type="text"
-                        ></v-text-field>
-                      </v-flex>
-                      <v-flex xs12>
-                        <v-text-field
-                          prepend-icon="phone"
-                          label="info07"
-                          type ="text"
-                        ></v-text-field>
-                      </v-flex>
-          
-                      <v-flex xs12>
-                        <v-text-field
-                          type="tel"
-                          prepend-icon="smartphone"
-                          label="info08"
-                        ></v-text-field>
-                      </v-flex>
-                      <!-- ------  Address  ------------------------------- -->
-                      <v-flex xs12>
-                        <v-subheader>Where do you live?</v-subheader>
-                        <v-divider></v-divider>
-                      </v-flex>
-                      <v-flex xs6>
-                        <v-text-field
-                          prepend-icon="home"
-                          label="Address 01"
-                        ></v-text-field>
-                      </v-flex>
-                      <v-flex xs6>
-                        <v-text-field
-                          prepend-icon="place"
-                          label="Address 02"
-                        ></v-text-field>
-                      </v-flex>
-                      <v-flex xs6>
-                        <v-text-field
-                          prepend-icon="place"
-                          label="City"
-                        ></v-text-field>
-                      </v-flex>
+                      
                     </v-layout>
                   </v-flex>
                 </v-layout>
               </v-form>
-              <!-- </v-container> -->
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
@@ -258,8 +121,7 @@
             <v-btn flat @click="cancel">Cancel</v-btn>
             <v-btn :disabled="!valid" flat color="primary" @click="save" @keyup.enter="save">Save</v-btn>
         </v-card-actions>
-      </v-card>
-  </v-dialog>
+    </v-card>
 </template>
 
 <script>
