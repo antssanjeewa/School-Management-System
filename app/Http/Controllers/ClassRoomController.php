@@ -14,18 +14,11 @@ class ClassRoomController extends Controller
      */
     public function index()
     {
-        //
+        $data =  ClassRoom::all();
+        return response()->json(['data'=>$data],200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+    
 
     /**
      * Store a newly created resource in storage.
@@ -35,51 +28,71 @@ class ClassRoomController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try{
+            $data = $this->validate(request(), [
+                'name' => 'required|string|max:50',
+                
+            ]);
+            
+            ClassRoom::create($data);
+            return response()->json(["message"=>"Add ClassRoom successfuly","responce"=>$data],201);
+        }catch(Exception $e){
+            return response()->json(["message"=>"Somthing want to wrong on the server."],  $e->getCode());
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Model\ClassRoom  $classRoom
+     * @param  \App\Model\ClassRoom  $ClassRoom
      * @return \Illuminate\Http\Response
      */
-    public function show(ClassRoom $classRoom)
+    public function show($id)
     {
-        //
+        return ClassRoom::find($id);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Model\ClassRoom  $classRoom
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(ClassRoom $classRoom)
-    {
-        //
-    }
+    
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Model\ClassRoom  $classRoom
+     * @param  \App\Model\ClassRoom  $ClassRoom
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ClassRoom $classRoom)
+    public function update(Request $request)
     {
-        //
+        $ClassRoom = ClassRoom::find($request->id);
+        if(!$ClassRoom){
+            return response()->json(["message"=>"ClassRoom Not Found"],404);
+        }
+        try{
+            $data = $this->validate(request(), [
+                'name' => 'required|string|max:50',
+                
+            ]);
+            
+            ClassRoom::update($data);
+            return response()->json(["message"=>"Add ClassRoom successfuly","responce"=>$data],201);
+        }catch(Exception $e){
+            return response()->json(["message"=>"Somthing want to wrong on the server."],  $e->getCode());
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Model\ClassRoom  $classRoom
+     * @param  \App\Model\ClassRoom  $ClassRoom
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ClassRoom $classRoom)
+    public function destroy(ClassRoom $ClassRoom)
     {
-        //
+        $ClassRoom = ClassRoom::find($request->id);
+        if(!$ClassRoom){
+            return response()->json(["message"=>"ClassRoom Not Found"],404);
+        }
+        $ClassRoom->delete();
+        return response()->json(['message'=>"Successfully Deleted..."],200);
     }
 }

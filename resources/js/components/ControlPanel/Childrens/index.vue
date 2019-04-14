@@ -1,23 +1,16 @@
 <template>
     <v-flex pa-3>
-        <v-toolbar flat>
-            <v-toolbar-title>Childrens</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-toolbar-items class="hidden-sm-and-down">
-                <v-btn flat>Link One</v-btn>
-            </v-toolbar-items>
-        </v-toolbar>
          <!-- table 01 --> 
          <v-flex py-3>
-            <v-toolbar flat color="success">
+            <v-toolbar flat>
               <!-- table name -->
-              <v-toolbar-title>Members Details</v-toolbar-title>
+              <v-toolbar-title>Childrens Details</v-toolbar-title>
               <v-divider
                 class="mx-2"
                 inset
                 vertical
               ></v-divider>
-              <span> Total No of Memebers : {{ allUsers.length }}</span>
+              <span> Total No of Memebers : {{ allChildrens.length }}</span>
               <v-spacer></v-spacer>
               <v-text-field
                   v-model="search"
@@ -28,7 +21,7 @@
               ></v-text-field>
              
              <template>
-                <v-btn color="primary" dark class="ml-5" @click="toggleForm('user')" >
+                <v-btn color="primary" dark class="ml-5" >
                   <v-icon medium>add</v-icon>
                     New User
                 </v-btn>
@@ -37,7 +30,7 @@
           <!-- data column in table -->
           <v-data-table
               :headers="headers" 
-              :items="allUsers"
+              :items="allChildrens"
               class="elevation-1"
               :search="search"
               :pagination.sync="pagination"
@@ -45,11 +38,11 @@
             >
               <template v-slot:items="props">
                 <td class="text-xs-left">{{ props.item.id }}</td>
-                <td> {{ props.item.title }}</td>
+                <td> {{ props.item.name }}</td>
                 <td class="text-xs-left"> {{ props.item.name }}</td>
-                <td class="text-xs-left">{{ props.item.mobile01 }}</td>
-                <td class="text-xs-left">{{ props.item.email }}</td>
-                <td class="text-xs-left">{{ props.item.nic }}</td>
+                <td class="text-xs-left">{{ props.item.gender }}</td>
+                <td class="text-xs-left">{{ props.item.name }}</td>
+                <td class="text-xs-left">{{ props.item.name }}</td>
                 <td class="justify-center layout px-0">
                   <v-tooltip bottom>
                       <template v-slot:activator="{ on }">
@@ -86,10 +79,10 @@
     </v-flex>
 </template>
 <script>
+import { mapActions, mapGetters } from 'vuex'    
     
-    export default{
+export default{
         data : () => ({
-            allUsers : [],
             pagination: {
                 descending: true,
                 //page: 1,
@@ -102,7 +95,6 @@
             search: '',
             headers: [
                 { text: 'Ref.ID',width: '1%', value: 'id' },
-                { text: 'Title', width: '1%', value: 'title'},
                 { text: 'Name', value: 'name'},
                 { text: 'Mobile', value: 'mobile01' },
                 { text: 'Email', value: 'email' },
@@ -112,8 +104,25 @@
 
             ]
         }),
-        components : {
-            
+        computed :{
+            ...mapGetters({
+                allChildrens : 'children/getAllChildrens'
+            })
+        },
+        created(){
+            // when table is preview, load the all banks from database
+          this.$store.dispatch("children/set_childrens").then(response => {
+            console.log(response)
+          }, error => {
+            // Get some error
+              console.error(error)
+          })
+        },
+        methods:{
+            ...mapActions({
+                // addchildren : 'children/add_new_children',
+                
+            })
         }
     }
 </script>

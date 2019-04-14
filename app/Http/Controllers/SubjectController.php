@@ -14,18 +14,11 @@ class SubjectController extends Controller
      */
     public function index()
     {
-        //
+        $data =  Subject::all();
+        return response()->json(['data'=>$data],200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+    
 
     /**
      * Store a newly created resource in storage.
@@ -35,51 +28,71 @@ class SubjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try{
+            $data = $this->validate(request(), [
+                'name' => 'required|string|max:50',
+                'teacher_id'=> ''
+            ]);
+            
+            Subject::create($data);
+            return response()->json(["message"=>"Add Subject successfuly","responce"=>$data],201);
+        }catch(Exception $e){
+            return response()->json(["message"=>"Somthing want to wrong on the server."],  $e->getCode());
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Model\Subject  $subject
+     * @param  \App\Model\Subject  $Subject
      * @return \Illuminate\Http\Response
      */
-    public function show(Subject $subject)
+    public function show($id)
     {
-        //
+        return Subject::find($id);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Model\Subject  $subject
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Subject $subject)
-    {
-        //
-    }
+    
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Model\Subject  $subject
+     * @param  \App\Model\Subject  $Subject
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Subject $subject)
+    public function update(Request $request)
     {
-        //
+        $Subject = Subject::find($request->id);
+        if(!$Subject){
+            return response()->json(["message"=>"Subject Not Found"],404);
+        }
+        try{
+            $data = $this->validate(request(), [
+                'name' => 'required|string|max:50',
+                'teacher_id'=> ''
+            ]);
+            
+            Subject::update($data);
+            return response()->json(["message"=>"Add Subject successfuly","responce"=>$data],201);
+        }catch(Exception $e){
+            return response()->json(["message"=>"Somthing want to wrong on the server."],  $e->getCode());
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Model\Subject  $subject
+     * @param  \App\Model\Subject  $Subject
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Subject $subject)
+    public function destroy(Subject $Subject)
     {
-        //
+        $Subject = Subject::find($request->id);
+        if(!$Subject){
+            return response()->json(["message"=>"Subject Not Found"],404);
+        }
+        $Subject->delete();
+        return response()->json(['message'=>"Successfully Deleted..."],200);
     }
 }

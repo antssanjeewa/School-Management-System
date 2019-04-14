@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Teacher;
+use App\Model\Marks;
 use Illuminate\Http\Request;
 
-class TeacherController extends Controller
+class MarksController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,7 @@ class TeacherController extends Controller
      */
     public function index()
     {
-        $data =  Teacher::all();
+        $data =  Marks::all();
         return response()->json(['data'=>$data],200);
     }
 
@@ -30,15 +30,15 @@ class TeacherController extends Controller
     {
         try{
             $data = $this->validate(request(), [
-                'name' => 'required|string|max:50',
-                'b_day'=> '',
-                'gender'=> '',
-                'address'=> '',
-                'contact_number'=> ''
+                'child_id'=> '',
+                'subject_id' => '',
+                'teacher_id'=> '',
+                'class_id'=> '',
+                'marks'=> ''
             ]);
             
-            Teacher::create($data);
-            return response()->json(["message"=>"Add Teacher successfuly","responce"=>$data],201);
+            Marks::create($data);
+            return response()->json(["message"=>"Add Marks successfuly","responce"=>$data],201);
         }catch(Exception $e){
             return response()->json(["message"=>"Somthing want to wrong on the server."],  $e->getCode());
         }
@@ -47,12 +47,12 @@ class TeacherController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Model\Teacher  $Teacher
+     * @param  \App\Model\Marks  $Marks
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        return Teacher::find($id);
+        return Marks::find($id);
     }
 
     
@@ -61,26 +61,26 @@ class TeacherController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Model\Teacher  $Teacher
+     * @param  \App\Model\Marks  $Marks
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
     {
-        $Teacher = Teacher::find($request->id);
-        if(!$Teacher){
-            return response()->json(["message"=>"Teacher Not Found"],404);
+        $Marks = Marks::find($request->id);
+        if(!$Marks){
+            return response()->json(["message"=>"Marks Not Found"],404);
         }
         try{
             $data = $this->validate(request(), [
-                'name' => 'required|string|max:50',
-                'b_day'=> '',
-                'gender'=> '',
-                'address'=> '',
-                'contact_number'=> ''
+                'child_id'=> '',
+                'subject_id' => '',
+                'teacher_id'=> '',
+                'class_id'=> '',
+                'marks'=> ''
             ]);
             
-            Teacher::update($data);
-            return response()->json(["message"=>"Add Teacher successfuly","responce"=>$data],201);
+            Marks::update($data);
+            return response()->json(["message"=>"Add Marks successfuly","responce"=>$data],201);
         }catch(Exception $e){
             return response()->json(["message"=>"Somthing want to wrong on the server."],  $e->getCode());
         }
@@ -89,16 +89,16 @@ class TeacherController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Model\Teacher  $Teacher
+     * @param  \App\Model\Marks  $Marks
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Teacher $Teacher)
+    public function destroy(Marks $Marks)
     {
-        $Teacher = Teacher::find($request->id);
-        if(!$Teacher){
-            return response()->json(["message"=>"Teacher Not Found"],404);
+        $Marks = Marks::find($request->id);
+        if(!$Marks){
+            return response()->json(["message"=>"Marks Not Found"],404);
         }
-        $Teacher->delete();
+        $Marks->delete();
         return response()->json(['message'=>"Successfully Deleted..."],200);
     }
 }

@@ -23,6 +23,7 @@ class CreateChildrensTable extends Migration
             $table->string('parent_name');
             $table->string('contact_number');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

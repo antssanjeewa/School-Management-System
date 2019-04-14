@@ -1,6 +1,6 @@
 export default {
 
-    allchildrens: [],
-    editchildren : {},
-    activechildren : {}
+    allChildrens: [],
+    editChildren : {},
+    activeChildren : {}
 }

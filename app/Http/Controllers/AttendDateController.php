@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Teacher;
+use App\Model\AttendDate;
 use Illuminate\Http\Request;
 
-class TeacherController extends Controller
+class AttendDateController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,7 @@ class TeacherController extends Controller
      */
     public function index()
     {
-        $data =  Teacher::all();
+        $data =  AttendDate::all();
         return response()->json(['data'=>$data],200);
     }
 
@@ -30,15 +30,12 @@ class TeacherController extends Controller
     {
         try{
             $data = $this->validate(request(), [
-                'name' => 'required|string|max:50',
-                'b_day'=> '',
-                'gender'=> '',
-                'address'=> '',
-                'contact_number'=> ''
+                'class_date'=> '',
+                
             ]);
             
-            Teacher::create($data);
-            return response()->json(["message"=>"Add Teacher successfuly","responce"=>$data],201);
+            AttendDate::create($data);
+            return response()->json(["message"=>"Add AttendDate successfuly","responce"=>$data],201);
         }catch(Exception $e){
             return response()->json(["message"=>"Somthing want to wrong on the server."],  $e->getCode());
         }
@@ -47,12 +44,12 @@ class TeacherController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Model\Teacher  $Teacher
+     * @param  \App\Model\AttendDate  $AttendDate
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        return Teacher::find($id);
+        return AttendDate::find($id);
     }
 
     
@@ -61,26 +58,22 @@ class TeacherController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Model\Teacher  $Teacher
+     * @param  \App\Model\AttendDate  $AttendDate
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
     {
-        $Teacher = Teacher::find($request->id);
-        if(!$Teacher){
-            return response()->json(["message"=>"Teacher Not Found"],404);
+        $AttendDate = AttendDate::find($request->id);
+        if(!$AttendDate){
+            return response()->json(["message"=>"AttendDate Not Found"],404);
         }
         try{
             $data = $this->validate(request(), [
-                'name' => 'required|string|max:50',
-                'b_day'=> '',
-                'gender'=> '',
-                'address'=> '',
-                'contact_number'=> ''
+                'class_date'=> '',     
             ]);
             
-            Teacher::update($data);
-            return response()->json(["message"=>"Add Teacher successfuly","responce"=>$data],201);
+            AttendDate::update($data);
+            return response()->json(["message"=>"Add AttendDate successfuly","responce"=>$data],201);
         }catch(Exception $e){
             return response()->json(["message"=>"Somthing want to wrong on the server."],  $e->getCode());
         }
@@ -89,16 +82,16 @@ class TeacherController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Model\Teacher  $Teacher
+     * @param  \App\Model\AttendDate  $AttendDate
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Teacher $Teacher)
+    public function destroy(AttendDate $AttendDate)
     {
-        $Teacher = Teacher::find($request->id);
-        if(!$Teacher){
-            return response()->json(["message"=>"Teacher Not Found"],404);
+        $AttendDate = AttendDate::find($request->id);
+        if(!$AttendDate){
+            return response()->json(["message"=>"AttendDate Not Found"],404);
         }
-        $Teacher->delete();
+        $AttendDate->delete();
         return response()->json(['message'=>"Successfully Deleted..."],200);
     }
 }

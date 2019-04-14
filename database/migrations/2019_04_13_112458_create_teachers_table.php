@@ -21,6 +21,7 @@ class CreateTeachersTable extends Migration
             $table->string('address');
             $table->string('contact_number');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

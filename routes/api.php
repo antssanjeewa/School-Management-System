@@ -28,3 +28,6 @@ Route::post('subjects/update','SubjectController@update');
 
 Route::apiResource('class_rooms', 'ClassRoomController', ['except' => ['update']]);
 Route::post('class_rooms/update','ClassRoomController@update');
+
+Route::apiResource('attend_date', 'AttendDateController', ['except' => ['update']]);
+Route::post('attend_date/update','AttendDateController@update');

@@ -14,7 +14,8 @@ class ChildrenController extends Controller
      */
     public function index()
     {
-        return Children::all();
+        $childs =  Children::all();
+        return response()->json(['data'=>$childs],200);
     }
 
     
@@ -27,7 +28,22 @@ class ChildrenController extends Controller
      */
     public function store(Request $request)
     {
-        return Children::create($request);
+        try{
+            $data = $this->validate(request(), [
+                'reg_number'=> '',
+                'name' => 'required|string|max:50',
+                'b_day'=> '',
+                'gender'=> '',
+                'address'=> '',
+                'parent_name'=> '',
+                'contact_number'=> ''
+            ]);
+            
+            Children::create($data);
+            return response()->json(["message"=>"Add Children successfuly","responce"=>$data],201);
+        }catch(Exception $e){
+            return response()->json(["message"=>"Somthing want to wrong on the server."],  $e->getCode());
+        }
     }
 
     /**
@@ -50,9 +66,28 @@ class ChildrenController extends Controller
      * @param  \App\Model\Children  $children
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Children $children)
+    public function update(Request $request)
     {
-        //
+        $children = Children::find($request->id);
+        if(!$children){
+            return response()->json(["message"=>"Children Not Found"],404);
+        }
+        try{
+            $data = $this->validate(request(), [
+                'reg_number'=> '',
+                'name' => 'required|string|max:50',
+                'b_day'=> '',
+                'gender'=> '',
+                'address'=> '',
+                'parent_name'=> '',
+                'contact_number'=> ''
+            ]);
+            
+            Children::update($data);
+            return response()->json(["message"=>"Add Children successfuly","responce"=>$data],201);
+        }catch(Exception $e){
+            return response()->json(["message"=>"Somthing want to wrong on the server."],  $e->getCode());
+        }
     }
 
     /**
@@ -63,6 +98,11 @@ class ChildrenController extends Controller
      */
     public function destroy(Children $children)
     {
-        //
+        $children = Children::find($request->id);
+        if(!$children){
+            return response()->json(["message"=>"Children Not Found"],404);
+        }
+        $children->delete();
+        return response()->json(['message'=>"Successfully Deleted..."],200);
     }
 }

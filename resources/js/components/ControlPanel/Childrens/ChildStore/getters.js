@@ -1,11 +1,11 @@
 import state from "./state";
 
 // get all childrens array
-export const getAllchildrens = (state) => {
-    return state.allchildrens
+export const getAllChildrens = (state) => {
+    return state.allChildrens
 }
 
 // get edit children
-export const getEditchildren = (state) => {
-    return state.editchildren
+export const getEditChildren = (state) => {
+    return state.editChildren
 }

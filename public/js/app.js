@@ -1894,120 +1894,103 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       valid: false,
-      expand: false,
-      formwidth: '900px',
-      titles: ['Ven.', 'Mr.', 'Miss.', 'Mrs.'],
       rules: {
         required: [function (v) {
           return !!v || 'This field is required';
         }]
       },
-      user: {
-        firstname: '',
-        lastname: '',
-        email: '',
-        landline: '',
-        mobile01: '',
-        mobile02: '',
-        country: 'Sri Lanka',
-        address: [{
-          'address01': ''
-        }]
+      children: {
+        reg_number: '',
+        name: '',
+        b_day: '',
+        gender: '',
+        address: '',
+        parent_name: '',
+        contact_number: ''
       }
     };
   },
-  watch: {
-    dialog: function dialog(val) {
-      // when dialog value is true, userChange() called
-      val && this.userChange();
+  created: function created() {
+    if (this.editchildren.id) {
+      Object.assign(this.children, this.editchildren);
+    } else {
+      this.clear();
     }
   },
   computed: _objectSpread({
     // Change Form Title name
     formTitle: function formTitle() {
-      return this.user.firstname ? 'Edit' : 'Add New';
+      return this.children.firstname ? 'Edit' : 'Add New';
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
-    dialog: 'dashboard/getUserForm',
-    editUser: 'user/getEditUser'
-  }), {
-    expandText: function expandText() {
-      return this.expand ? '<< Less' : 'More >>';
-    }
-  }),
+    editchildren: 'children/getEditChildren'
+  })),
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])({
-    toggleForm: 'dashboard/set_toggle_form',
-    addUser: 'user/add_new_user',
-    updateUser: 'user/update_user',
-    updateEditUser: 'user/set_edit_user'
+    addchildren: 'children/add_new_children',
+    updatechildren: 'children/update_children',
+    updateEditchildren: 'children/set_edit_children'
   }), {
-    // form identify is this 'new user' or 'update user'
-    userChange: function userChange() {
-      if (this.editUser.id) {
-        Object.assign(this.user, this.editUser);
-        this.user.firstname = this.user.name.split(' ')[0];
-        this.user.lastname = this.user.name.split(' ')[1];
-      } else {
-        this.clear();
-      }
-    },
     // when cancel button click Form is close
     cancel: function cancel() {
       var _this = this;
 
-      this.toggleForm('user');
       setTimeout(function () {
         return _this.clear();
       }, 500);
     },
     // Clear the Form field's
     clear: function clear() {
-      this.user = {
-        firstname: '',
-        lastname: '',
-        mobile01: '',
-        country: 'Sri Lanka',
-        address: [{
-          'address01': ''
-        }]
-      }, this.$refs.form.resetValidation();
-      this.updateEditUser(this.user);
+      this.children = {
+        reg_number: '',
+        name: '',
+        b_day: '',
+        gender: '',
+        address: '',
+        parent_name: '',
+        contact_number: ''
+      }, // this.$refs.form.resetValidation()
+      this.updateEditchildren(this.children);
     },
     // save the form value's
     save: function save() {
       var _this2 = this;
 
       if (this.$refs.form.validate()) {
-        // update exist user
-        if (this.user.id) {
-          this.user.name = this.user.firstname + ' ' + this.user.lastname; //this.updateUser(this.user)
-
-          this.updateUser(this.user).then(function (response) {
-            _this2.toggleForm('user');
-
+        // update exist children
+        if (this.children.id) {
+          //this.updatechildren(this.children)
+          this.updatechildren(this.children).then(function (response) {
             setTimeout(function () {
               return _this2.clear();
             }, 500);
           }, function (error) {
-            console.error("Got nothing from server. Prompt user to check internet connection and try again");
-          }); // add new user
+            console.error("Got nothing from server. Prompt children to check internet connection and try again");
+          }); // add new children
         } else {
-          this.addUser(this.user);
-          this.toggleForm('user');
-          setTimeout(function () {
-            return _this2.clear();
-          }, 500);
+          this.addchildren(this.children).then(function (responce) {
+            _this2.$router.push({
+              path: '/childs'
+            });
+
+            setTimeout(function () {
+              return _this2.clear();
+            }, 500);
+          }, function (error) {});
         }
       }
-    },
-    // form width get full screen 
-    more: function more() {
-      this.expand = !this.expand;
     }
   })
 });
@@ -2023,6 +2006,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2103,17 +2091,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      allUsers: [],
       pagination: {
         descending: true,
         //page: 1,
@@ -2131,10 +2112,6 @@ __webpack_require__.r(__webpack_exports__);
         text: 'Ref.ID',
         width: '1%',
         value: 'id'
-      }, {
-        text: 'Title',
-        width: '1%',
-        value: 'title'
       }, {
         text: 'Name',
         value: 'name'
@@ -2154,7 +2131,20 @@ __webpack_require__.r(__webpack_exports__);
       }]
     };
   },
-  components: {}
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
+    allChildrens: 'children/getAllChildrens'
+  })),
+  created: function created() {
+    // when table is preview, load the all banks from database
+    this.$store.dispatch("children/set_childrens").then(function (response) {
+      console.log(response);
+    }, function (error) {
+      // Get some error
+      console.error(error);
+    });
+  },
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])({// addchildren : 'children/add_new_children',
+  }))
 });
 
 /***/ }),
@@ -38292,62 +38282,25 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "v-card",
+    { staticClass: "mt-3" },
     [
       _c(
         "v-toolbar",
-        { attrs: { card: "", dark: "", color: "primary" } },
+        { attrs: { flat: "" } },
         [
-          _c("v-toolbar-title", [
-            _vm._v(" " + _vm._s(_vm.formTitle) + " Child Register")
-          ]),
+          _c("v-toolbar-title", [_vm._v("New Childrens Register")]),
           _vm._v(" "),
           _c("v-spacer"),
           _vm._v(" "),
           _c(
-            "v-tooltip",
-            {
-              attrs: { bottom: "" },
-              scopedSlots: _vm._u([
-                {
-                  key: "activator",
-                  fn: function(ref) {
-                    var on = ref.on
-                    return [
-                      _c(
-                        "v-btn",
-                        _vm._g(
-                          {
-                            attrs: { icon: "", large: "", target: "_blank" },
-                            on: { click: _vm.clear }
-                          },
-                          on
-                        ),
-                        [
-                          _c("v-icon", { attrs: { large: "" } }, [
-                            _vm._v("person_add")
-                          ])
-                        ],
-                        1
-                      )
-                    ]
-                  }
-                }
-              ])
-            },
-            [_vm._v(" "), _c("span", [_vm._v(" Add New Child")])]
-          ),
-          _vm._v(" "),
-          _c(
-            "v-btn",
-            { attrs: { icon: "", dark: "" }, on: { click: _vm.cancel } },
-            [_c("v-icon", [_vm._v("close")])],
+            "v-toolbar-items",
+            { staticClass: "hidden-sm-and-down" },
+            [_c("v-btn", { attrs: { flat: "" } }, [_vm._v("Link One")])],
             1
           )
         ],
         1
       ),
-      _vm._v(" "),
-      _c("v-divider"),
       _vm._v(" "),
       _c(
         "v-card-text",
@@ -38393,6 +38346,60 @@ var render = function() {
                                 { attrs: { "align-center": "" } },
                                 [
                                   _c(
+                                    "v-flex",
+                                    { attrs: { xs12: "", md3: "" } },
+                                    [
+                                      _c("v-text-field", {
+                                        attrs: {
+                                          name: "firstname",
+                                          label: "Reg Number",
+                                          type: "text",
+                                          rules: _vm.rules.required
+                                        },
+                                        model: {
+                                          value: _vm.children.reg_number,
+                                          callback: function($$v) {
+                                            _vm.$set(
+                                              _vm.children,
+                                              "reg_number",
+                                              $$v
+                                            )
+                                          },
+                                          expression: "children.reg_number"
+                                        }
+                                      })
+                                    ],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c("v-spacer"),
+                                  _vm._v(" "),
+                                  _c(
+                                    "v-flex",
+                                    { attrs: { xs12: "", md6: "" } },
+                                    [
+                                      _c("v-text-field", {
+                                        attrs: {
+                                          name: "firstname",
+                                          label: "Full Name",
+                                          type: "text",
+                                          rules: _vm.rules.required
+                                        },
+                                        model: {
+                                          value: _vm.children.name,
+                                          callback: function($$v) {
+                                            _vm.$set(_vm.children, "name", $$v)
+                                          },
+                                          expression: "children.name"
+                                        }
+                                      })
+                                    ],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c("v-spacer"),
+                                  _vm._v(" "),
+                                  _c(
                                     "v-avatar",
                                     {
                                       staticClass: "mr-3",
@@ -38407,54 +38414,6 @@ var render = function() {
                                         }
                                       })
                                     ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c("v-spacer"),
-                                  _vm._v(" "),
-                                  _c(
-                                    "v-flex",
-                                    { attrs: { xs12: "", md4: "" } },
-                                    [
-                                      _c("v-text-field", {
-                                        attrs: {
-                                          name: "firstname",
-                                          label: "First Name",
-                                          type: "text",
-                                          rules: _vm.rules.required
-                                        },
-                                        model: {
-                                          value: _vm.user.firstname,
-                                          callback: function($$v) {
-                                            _vm.$set(_vm.user, "firstname", $$v)
-                                          },
-                                          expression: "user.firstname"
-                                        }
-                                      })
-                                    ],
-                                    1
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "v-flex",
-                                    { attrs: { xs12: "", md5: "" } },
-                                    [
-                                      _c("v-text-field", {
-                                        attrs: {
-                                          name: "lastname",
-                                          label: "Last Name",
-                                          type: "text",
-                                          rules: _vm.rules.required
-                                        },
-                                        model: {
-                                          value: _vm.user.lastname,
-                                          callback: function($$v) {
-                                            _vm.$set(_vm.user, "lastname", $$v)
-                                          },
-                                          expression: "user.lastname"
-                                        }
-                                      })
-                                    ],
-                                    1
                                   )
                                 ],
                                 1
@@ -38475,11 +38434,11 @@ var render = function() {
                                   rules: _vm.rules.required
                                 },
                                 model: {
-                                  value: _vm.user.mobile01,
+                                  value: _vm.children.b_day,
                                   callback: function($$v) {
-                                    _vm.$set(_vm.user, "mobile01", $$v)
+                                    _vm.$set(_vm.children, "b_day", $$v)
                                   },
-                                  expression: "user.mobile01"
+                                  expression: "children.b_day"
                                 }
                               })
                             ],
@@ -38496,11 +38455,11 @@ var render = function() {
                                   label: "Gender"
                                 },
                                 model: {
-                                  value: _vm.user.email,
+                                  value: _vm.children.gender,
                                   callback: function($$v) {
-                                    _vm.$set(_vm.user, "email", $$v)
+                                    _vm.$set(_vm.children, "gender", $$v)
                                   },
-                                  expression: "user.email"
+                                  expression: "children.gender"
                                 }
                               })
                             ],
@@ -38518,11 +38477,11 @@ var render = function() {
                                   type: "text"
                                 },
                                 model: {
-                                  value: _vm.user.nic,
+                                  value: _vm.children.address,
                                   callback: function($$v) {
-                                    _vm.$set(_vm.user, "nic", $$v)
+                                    _vm.$set(_vm.children, "address", $$v)
                                   },
-                                  expression: "user.nic"
+                                  expression: "children.address"
                                 }
                               })
                             ],
@@ -38539,11 +38498,11 @@ var render = function() {
                                   label: "Class Room"
                                 },
                                 model: {
-                                  value: _vm.user.mobile02,
+                                  value: _vm.children.class,
                                   callback: function($$v) {
-                                    _vm.$set(_vm.user, "mobile02", $$v)
+                                    _vm.$set(_vm.children, "class", $$v)
                                   },
-                                  expression: "user.mobile02"
+                                  expression: "children.class"
                                 }
                               })
                             ],
@@ -38561,11 +38520,11 @@ var render = function() {
                                   type: "text"
                                 },
                                 model: {
-                                  value: _vm.user.landline,
+                                  value: _vm.children.parent_name,
                                   callback: function($$v) {
-                                    _vm.$set(_vm.user, "landline", $$v)
+                                    _vm.$set(_vm.children, "parent_name", $$v)
                                   },
-                                  expression: "user.landline"
+                                  expression: "children.parent_name"
                                 }
                               })
                             ],
@@ -38584,11 +38543,15 @@ var render = function() {
                                   mask: "phone"
                                 },
                                 model: {
-                                  value: _vm.user.mobile02,
+                                  value: _vm.children.contact_number,
                                   callback: function($$v) {
-                                    _vm.$set(_vm.user, "mobile02", $$v)
+                                    _vm.$set(
+                                      _vm.children,
+                                      "contact_number",
+                                      $$v
+                                    )
                                   },
-                                  expression: "user.mobile02"
+                                  expression: "children.contact_number"
                                 }
                               })
                             ],
@@ -38615,12 +38578,6 @@ var render = function() {
       _c(
         "v-card-actions",
         [
-          _c(
-            "v-btn",
-            { attrs: { flat: "", color: "primary" }, on: { click: _vm.more } },
-            [_vm._v(" " + _vm._s(_vm.expandText) + " ")]
-          ),
-          _vm._v(" "),
           _c("v-spacer"),
           _vm._v(" "),
           _c("v-btn", { attrs: { flat: "" }, on: { click: _vm.cancel } }, [
@@ -38631,18 +38588,7 @@ var render = function() {
             "v-btn",
             {
               attrs: { disabled: !_vm.valid, flat: "", color: "primary" },
-              on: {
-                click: _vm.save,
-                keyup: function($event) {
-                  if (
-                    !$event.type.indexOf("key") &&
-                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                  ) {
-                    return null
-                  }
-                  return _vm.save($event)
-                }
-              }
+              on: { click: _vm.save }
             },
             [_vm._v("Save")]
           )
@@ -38680,32 +38626,14 @@ var render = function() {
     { attrs: { "pa-3": "" } },
     [
       _c(
-        "v-toolbar",
-        { attrs: { flat: "" } },
-        [
-          _c("v-toolbar-title", [_vm._v("Childrens")]),
-          _vm._v(" "),
-          _c("v-spacer"),
-          _vm._v(" "),
-          _c(
-            "v-toolbar-items",
-            { staticClass: "hidden-sm-and-down" },
-            [_c("v-btn", { attrs: { flat: "" } }, [_vm._v("Link One")])],
-            1
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
         "v-flex",
         { attrs: { "py-3": "" } },
         [
           _c(
             "v-toolbar",
-            { attrs: { flat: "", color: "success" } },
+            { attrs: { flat: "" } },
             [
-              _c("v-toolbar-title", [_vm._v("Members Details")]),
+              _c("v-toolbar-title", [_vm._v("Childrens Details")]),
               _vm._v(" "),
               _c("v-divider", {
                 staticClass: "mx-2",
@@ -38713,7 +38641,9 @@ var render = function() {
               }),
               _vm._v(" "),
               _c("span", [
-                _vm._v(" Total No of Memebers : " + _vm._s(_vm.allUsers.length))
+                _vm._v(
+                  " Total No of Memebers : " + _vm._s(_vm.allChildrens.length)
+                )
               ]),
               _vm._v(" "),
               _c("v-spacer"),
@@ -38739,12 +38669,7 @@ var render = function() {
                   "v-btn",
                   {
                     staticClass: "ml-5",
-                    attrs: { color: "primary", dark: "" },
-                    on: {
-                      click: function($event) {
-                        return _vm.toggleForm("user")
-                      }
-                    }
+                    attrs: { color: "primary", dark: "" }
                   },
                   [
                     _c("v-icon", { attrs: { medium: "" } }, [_vm._v("add")]),
@@ -38761,7 +38686,7 @@ var render = function() {
             staticClass: "elevation-1",
             attrs: {
               headers: _vm.headers,
-              items: _vm.allUsers,
+              items: _vm.allChildrens,
               search: _vm.search,
               pagination: _vm.pagination,
               "rows-per-page-items": _vm.pagination.rowsPerPageItems
@@ -38780,22 +38705,22 @@ var render = function() {
                       _vm._v(_vm._s(props.item.id))
                     ]),
                     _vm._v(" "),
-                    _c("td", [_vm._v(" " + _vm._s(props.item.title))]),
+                    _c("td", [_vm._v(" " + _vm._s(props.item.name))]),
                     _vm._v(" "),
                     _c("td", { staticClass: "text-xs-left" }, [
                       _vm._v(" " + _vm._s(props.item.name))
                     ]),
                     _vm._v(" "),
                     _c("td", { staticClass: "text-xs-left" }, [
-                      _vm._v(_vm._s(props.item.mobile01))
+                      _vm._v(_vm._s(props.item.gender))
                     ]),
                     _vm._v(" "),
                     _c("td", { staticClass: "text-xs-left" }, [
-                      _vm._v(_vm._s(props.item.email))
+                      _vm._v(_vm._s(props.item.name))
                     ]),
                     _vm._v(" "),
                     _c("td", { staticClass: "text-xs-left" }, [
-                      _vm._v(_vm._s(props.item.nic))
+                      _vm._v(_vm._s(props.item.name))
                     ]),
                     _vm._v(" "),
                     _c(
@@ -81429,8 +81354,10 @@ var set_childrens = function set_childrens(_ref) {
       commit('set_all_childrens', response.data.data);
       resolve(response); // Let the calling function know that http is done. You may send some data back
     }, function (error) {
-      // http failed, let the calling function know that action did not work out
+      console.log(error.response); // http failed, let the calling function know that action did not work out
+
       reject(error);
+      console.log("kkk");
     });
   });
 }; // add new children to the database
@@ -81445,7 +81372,10 @@ var add_new_children = function add_new_children(_ref2, children) {
       root: true
     });
     dispatch('set_childrens');
+    console.log("kkk");
+    console.log(response);
   })["catch"](function (error) {
+    console.log(error.response);
     dispatch('set_message', {
       message: error.response.data.message,
       type: 'error'
@@ -81513,22 +81443,22 @@ var set_children_details = function set_children_details(_ref5, id) {
 /*!******************************************************************************!*\
   !*** ./resources/js/components/ControlPanel/Childrens/ChildStore/getters.js ***!
   \******************************************************************************/
-/*! exports provided: getAllchildrens, getEditchildren */
+/*! exports provided: getAllChildrens, getEditChildren */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAllchildrens", function() { return getAllchildrens; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getEditchildren", function() { return getEditchildren; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAllChildrens", function() { return getAllChildrens; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getEditChildren", function() { return getEditChildren; });
 /* harmony import */ var _state__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./state */ "./resources/js/components/ControlPanel/Childrens/ChildStore/state.js");
  // get all childrens array
 
-var getAllchildrens = function getAllchildrens(state) {
-  return state.allchildrens;
+var getAllChildrens = function getAllChildrens(state) {
+  return state.allChildrens;
 }; // get edit children
 
-var getEditchildren = function getEditchildren(state) {
-  return state.editchildren;
+var getEditChildren = function getEditChildren(state) {
+  return state.editChildren;
 };
 
 /***/ }),
@@ -81574,16 +81504,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "set_active_children", function() { return set_active_children; });
 // set all childrens to the allchildrens Array
 var set_all_childrens = function set_all_childrens(state, childrens) {
-  return state.allchildrens = childrens;
+  return state.allChildrens = childrens;
 }; // set update children to form
 
 var set_update_children_to_form = function set_update_children_to_form(state, children) {
-  return state.editchildren = children;
+  return state.editChildren = children;
 }; // set active children information
 
 var set_active_children = function set_active_children(state, children) {
   //console.log(state.allchildrens.find( item => item.id === children.id ) )
-  return state.activechildren = children;
+  return state.activeChildren = children;
 };
 
 /***/ }),
@@ -81598,9 +81528,9 @@ var set_active_children = function set_active_children(state, children) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
-  allchildrens: [],
-  editchildren: {},
-  activechildren: {}
+  allChildrens: [],
+  editChildren: {},
+  activeChildren: {}
 });
 
 /***/ }),
