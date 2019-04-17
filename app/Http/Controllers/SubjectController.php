@@ -63,8 +63,8 @@ class SubjectController extends Controller
      */
     public function update(Request $request)
     {
-        $Subject = Subject::find($request->id);
-        if(!$Subject){
+        $subject = Subject::find($request->id);
+        if(!$subject){
             return response()->json(["message"=>"Subject Not Found"],404);
         }
         try{
@@ -73,7 +73,7 @@ class SubjectController extends Controller
                 'teacher_id'=> ''
             ]);
             
-            Subject::update($data);
+            $subject->update($data);
             return response()->json(["message"=>"Add Subject successfuly","responce"=>$data],201);
         }catch(Exception $e){
             return response()->json(["message"=>"Somthing want to wrong on the server."],  $e->getCode());

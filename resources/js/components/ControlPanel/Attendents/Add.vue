@@ -43,7 +43,7 @@
                 <v-select
                     :items="allClasses"
                     item-text ="name"
-                    item-value="id"
+                    item-value=""
                     prepend-icon="account_balance"
                     label="Donation Program"
                     v-model="class_room"
@@ -112,5 +112,13 @@
                 allClasses : 'class_room/getAllClassRoom'
             })
         },
+        watch: {
+            class_room (val) {
+            // when open dialog form is true, class_roomChange() called
+            //val && this.classRoomChange()
+            console.log(val)
+                
+            }
+        }
     }
 </script>

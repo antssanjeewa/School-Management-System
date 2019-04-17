@@ -21,7 +21,7 @@
               ></v-text-field>
              
              <template>
-                <v-btn color="primary" dark class="ml-5" >
+                <v-btn color="primary" dark class="ml-5" to="/childs/add">
                   <v-icon medium>add</v-icon>
                     New User
                 </v-btn>
@@ -112,7 +112,7 @@ export default{
         created(){
             // when table is preview, load the all banks from database
           this.$store.dispatch("children/set_childrens").then(response => {
-            console.log(response)
+            
           }, error => {
             // Get some error
               console.error(error)

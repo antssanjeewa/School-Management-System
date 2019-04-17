@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateChildAttendance extends Migration
+class CreateAttendDateChildren extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateChildAttendance extends Migration
      */
     public function up()
     {
-        Schema::create('child_attendance', function (Blueprint $table) {
+        Schema::create('attend_date_children', function (Blueprint $table) {
             $table->unsignedBigInteger('child_id');
             $table->unsignedBigInteger('attend_date_id');
             $table->boolean('present');
@@ -35,6 +35,6 @@ class CreateChildAttendance extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('child_attendance');
+        Schema::dropIfExists('attend_date_children');
     }
 }

@@ -66,8 +66,8 @@ class TeacherController extends Controller
      */
     public function update(Request $request)
     {
-        $Teacher = Teacher::find($request->id);
-        if(!$Teacher){
+        $teacher = Teacher::find($request->id);
+        if(!$teacher){
             return response()->json(["message"=>"Teacher Not Found"],404);
         }
         try{
@@ -79,7 +79,7 @@ class TeacherController extends Controller
                 'contact_number'=> ''
             ]);
             
-            Teacher::update($data);
+            $teacher->update($data);
             return response()->json(["message"=>"Add Teacher successfuly","responce"=>$data],201);
         }catch(Exception $e){
             return response()->json(["message"=>"Somthing want to wrong on the server."],  $e->getCode());

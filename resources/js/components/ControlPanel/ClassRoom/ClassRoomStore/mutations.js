@@ -7,13 +7,8 @@ export const set_all_class_rooms = (state, classes) => {
     return state.allClassRoom = classes
 }
 
-// set update children to form
-export const set_update_children_to_form = (state, children) => {
-    return state.editChildren = children
+// set update class_room to form
+export const set_update_class_room_to_form = (state, class_room) => {
+    return state.editClassRoom = class_room
 }
 
-// set active children information
-export const set_active_children = (state, children) => {
-    //console.log(state.allchildrens.find( item => item.id === children.id ) )
-    return state.activeChildren = children
-}

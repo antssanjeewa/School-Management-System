@@ -49,7 +49,8 @@ class ClassRoomController extends Controller
      */
     public function show($id)
     {
-        return ClassRoom::find($id);
+        $d = ClassRoom::find($id);
+        return $d;
     }
 
     
@@ -63,8 +64,8 @@ class ClassRoomController extends Controller
      */
     public function update(Request $request)
     {
-        $ClassRoom = ClassRoom::find($request->id);
-        if(!$ClassRoom){
+        $classRoom = ClassRoom::find($request->id);
+        if(!$classRoom){
             return response()->json(["message"=>"ClassRoom Not Found"],404);
         }
         try{
@@ -73,7 +74,7 @@ class ClassRoomController extends Controller
                 
             ]);
             
-            ClassRoom::update($data);
+            $classRoom->update($data);
             return response()->json(["message"=>"Add ClassRoom successfuly","responce"=>$data],201);
         }catch(Exception $e){
             return response()->json(["message"=>"Somthing want to wrong on the server."],  $e->getCode());

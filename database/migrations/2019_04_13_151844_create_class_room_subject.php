@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateClassSubjects extends Migration
+class CreateClassRoomSubject extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateClassSubjects extends Migration
      */
     public function up()
     {
-        Schema::create('class_subjects', function (Blueprint $table) {
+        Schema::create('class_room_subject', function (Blueprint $table) {
             $table->unsignedBigInteger('class_room_id');
             $table->unsignedBigInteger('subject_id');
             $table->timestamps();
@@ -34,6 +34,6 @@ class CreateClassSubjects extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('class_subjects');
+        Schema::dropIfExists('class_room_subject');
     }
 }

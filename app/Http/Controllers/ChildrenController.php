@@ -83,7 +83,7 @@ class ChildrenController extends Controller
                 'contact_number'=> ''
             ]);
             
-            Children::update($data);
+            $children->update($data);
             return response()->json(["message"=>"Add Children successfuly","responce"=>$data],201);
         }catch(Exception $e){
             return response()->json(["message"=>"Somthing want to wrong on the server."],  $e->getCode());

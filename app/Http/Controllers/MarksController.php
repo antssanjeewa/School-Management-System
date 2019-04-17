@@ -66,8 +66,8 @@ class MarksController extends Controller
      */
     public function update(Request $request)
     {
-        $Marks = Marks::find($request->id);
-        if(!$Marks){
+        $marks = Marks::find($request->id);
+        if(!$marks){
             return response()->json(["message"=>"Marks Not Found"],404);
         }
         try{
@@ -79,7 +79,7 @@ class MarksController extends Controller
                 'marks'=> ''
             ]);
             
-            Marks::update($data);
+            $marks->update($data);
             return response()->json(["message"=>"Add Marks successfuly","responce"=>$data],201);
         }catch(Exception $e){
             return response()->json(["message"=>"Somthing want to wrong on the server."],  $e->getCode());

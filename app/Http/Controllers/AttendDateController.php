@@ -63,8 +63,8 @@ class AttendDateController extends Controller
      */
     public function update(Request $request)
     {
-        $AttendDate = AttendDate::find($request->id);
-        if(!$AttendDate){
+        $attendDate = AttendDate::find($request->id);
+        if(!$attendDate){
             return response()->json(["message"=>"AttendDate Not Found"],404);
         }
         try{
@@ -72,7 +72,7 @@ class AttendDateController extends Controller
                 'class_date'=> '',     
             ]);
             
-            AttendDate::update($data);
+            $attendDate->update($data);
             return response()->json(["message"=>"Add AttendDate successfuly","responce"=>$data],201);
         }catch(Exception $e){
             return response()->json(["message"=>"Somthing want to wrong on the server."],  $e->getCode());

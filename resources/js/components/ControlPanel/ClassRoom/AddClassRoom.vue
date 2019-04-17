@@ -1,13 +1,18 @@
 <template>
-    <v-dialog v-model="dialog" persistent scrollable width="800px">
+    <v-dialog v-model="dialog" persistent scrollable :width="formwidth">
         <v-card>
-        <v-toolbar flat>
-            <v-toolbar-title>Add New Class Room</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-toolbar-items class="hidden-sm-and-down">
-                <v-btn flat>View Class</v-btn>
-            </v-toolbar-items>
-        </v-toolbar>
+            <v-toolbar card dark color="primary">
+            <!-- Title of the Dialog Form -->
+            <v-toolbar-title> {{ formTitle }} Bank</v-toolbar-title>
+                <v-spacer></v-spacer>
+
+                <!-- Close Button Top -->
+                <v-btn icon dark @click="cancel">
+                <v-icon>close</v-icon>
+                </v-btn>
+
+            </v-toolbar>
+            <v-divider></v-divider>
         <v-card-text  class="px-5">
         <v-form ref="form" v-model="valid" lazy-validation @submit.prevent="save">
             <v-flex row>
@@ -17,6 +22,7 @@
                         prepend-icon="smartphone"
                         label="Class Name"
                         :rules="rules.required"
+                        v-model="class_room.name"
                     ></v-text-field>
                 </v-flex>
             </v-flex>
@@ -31,14 +37,14 @@
     </v-dialog>
 </template>
 <script>
-    import { mapGetters } from 'vuex'
+    import { mapGetters, mapActions } from 'vuex'
     export default{
         data(){
         return {
             valid : false,
             expand : false,
             // Customized Dialog Form Width
-            formwidth : '900px',
+            formwidth : '500px',
             // Validation Rules for Form
             rules : {
               required : [
@@ -47,9 +53,7 @@
             },
             // Default class_room Object
             class_room : {
-              name : '',
-              branch : '',
-              acc_number : ''
+              name : ''
             }
         }
     },
@@ -69,7 +73,7 @@
           // Get Dialog Visibility Value
           dialog : 'class_room/getDialogValue',
           // Get Edit class_room Details
-          editclass_room : 'dashboard/getEditItem'
+          editclass_room : 'class_room/getEditClassRoom'
         }),
       // Expand Button Name Change
         expandText () {
@@ -79,11 +83,11 @@
     methods:{
       ...mapActions({
         // Toggle Dialog Form to Show/ Hide
-          toggleForm : 'dashboard/set_toggle_form',
+        toggleForm : 'class_room/set_toggle_form',
         // Add new class_room to database
           addclass_room : 'class_room/add_new_class_room',
         // Update Item Change in State
-          updateItem : 'dashboard/set_edit_item',
+          updateItem : 'class_room/set_edit_class_room',
         }),
 
         // form identify is this 'new class_room' or 'update class_room'
@@ -97,15 +101,13 @@
         },
         // when cancel button click Form is close
         cancel(){
-          this.toggleForm('class_room')
+          this.toggleForm()
           setTimeout(() => this.clear(), 500);
         },
         // Clear the Form field's
         clear(){
           this.class_room = { 
-              name : '',
-              brach : '',
-              acc_number : ''
+              name : ''
           }
           this.updateItem(this.class_room)
           this.$refs.form.resetValidation()
@@ -117,14 +119,14 @@
             // update exist class_room
             if(this.class_room.id){
               this.$store.dispatch("class_room/update_class_room",this.class_room).then(response => {
-                this.toggleForm('class_room')
+                this.toggleForm()
                 setTimeout(() => this.clear(), 500);
               }, error => {})
             
             // add new class_room
             }else{
               this.addclass_room(this.class_room).then(responce =>{
-                  this.toggleForm('class_room')
+                  this.toggleForm()
                   setTimeout(() => this.clear(), 500);
               }, error => {}) 
             }

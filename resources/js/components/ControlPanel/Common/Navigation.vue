@@ -107,8 +107,8 @@
               text: 'Other',
               model: false,
               children: [
-                { icon: 'my_location', text: 'Add Subject', link:'/districts'},
-                { icon: 'airplanemode_active', text: 'Add Class', link:'/countries'},
+                { icon: 'my_location', text: 'Subject', link:'/districts'},
+                { icon: 'airplanemode_active', text: 'Class Room', link:'/class_room'},
               ]
             },
     

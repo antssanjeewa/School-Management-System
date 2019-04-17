@@ -10,7 +10,7 @@ class ClassRoom extends Model
     use SoftDeletes;
     
     protected $fillable = [
-
+        'name'
     ];
 
     public function children(){
