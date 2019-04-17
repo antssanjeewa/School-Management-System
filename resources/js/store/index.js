@@ -9,6 +9,7 @@ import * as actions from './actions'
 import * as getters from './getters' 
 
 import children from '../components/ControlPanel/Childrens/ChildStore'
+import class_room from '../components/ControlPanel/ClassRoom/ClassRoomStore'
 
 
 export default new Vuex.Store({
@@ -17,6 +18,7 @@ export default new Vuex.Store({
     mutations,
     actions,
     modules : {
-        children
+        children,
+        class_room
     }
 });

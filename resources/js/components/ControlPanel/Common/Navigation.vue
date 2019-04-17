@@ -80,7 +80,7 @@
             drawer:true,
             items: [
             { icon: 'dashboard', text: 'Dashboard', link:'/'},
-            { icon: 'folder', text: 'Attendent Mark', link:'/attendant' },
+            { icon: 'folder', text: 'Attendent Mark', link:'/attend/add' },
             { icon: 'person', text: 'Add Marks', link:'/childs' },   
             { icon: 'keyboard_arrow_up',
               'icon-alt': 'keyboard_arrow_down',
