@@ -49,8 +49,9 @@ class ClassRoomController extends Controller
      */
     public function show($id)
     {
-        $d = ClassRoom::find($id);
-        return $d;
+        $class = ClassRoom::find($id);
+        $class->children;
+        return  $class;
     }
 
     

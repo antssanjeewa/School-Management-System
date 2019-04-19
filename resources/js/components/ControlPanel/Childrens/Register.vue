@@ -26,8 +26,8 @@
         <!-- <v-divider></v-divider> -->
         <v-card-text  class="px-5">
             <!-- <v-container grid-list-sm class="pa-1"> -->
-                <v-form ref="form" v-model="valid" lazy-validation>
-                  <v-layout>
+            <v-form ref="form" v-model="valid" lazy-validation>
+                <v-layout>
                     <v-flex xs12>
                       <v-layout row wrap>
                         <!-- -------  Main Information  ------------------------------ -->
@@ -42,19 +42,19 @@
                                 v-model="children.reg_number"
                               >
                               </v-text-field>
-							</v-flex>
-							<v-spacer></v-spacer>
-                          <v-flex xs12 md6>
-                            <v-text-field 
-                              name="firstname" 
-                              label="Full Name" 
-                              type="text"
-                              :rules="rules.required"
-                              v-model="children.name"
-                            >
-                            </v-text-field>
-						  </v-flex>
-						  <v-spacer></v-spacer>
+                            </v-flex>
+                            <v-spacer></v-spacer>
+                                        <v-flex xs12 md6>
+                                          <v-text-field 
+                                            name="firstname" 
+                                            label="Full Name" 
+                                            type="text"
+                                            :rules="rules.required"
+                                            v-model="children.name"
+                                          >
+                                          </v-text-field>
+                            </v-flex>
+                            <v-spacer></v-spacer>
                           <v-avatar size="60px" class="mr-3">
                             <img
                               src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png"
@@ -62,8 +62,8 @@
                             >
                           </v-avatar>
                           
-                        </v-layout>
-                      </v-flex>
+               		</v-layout>
+                    	</v-flex>
           
                       <v-flex xs12 md6>
                         <v-text-field
@@ -91,13 +91,16 @@
                           v-model="children.address"
                         ></v-text-field>
                       </v-flex>
-                      <v-flex xs6>
-                        <v-text-field
-                          prepend-icon="smartphone"
-                          label="Class Room"
-                          v-model="children.class"
-                        ></v-text-field>
-                      </v-flex>
+                      <v-flex xs12 md6>
+							<v-select
+								:items="allClasses"
+								item-text ="name"
+								item-value="id"
+								prepend-icon="account_balance"
+								label="Class Room"
+								v-model="children.class"
+							></v-select>
+						</v-flex>
                       
                       <v-flex xs6>
                         <v-text-field
@@ -152,7 +155,8 @@ export default {
             gender : '',
             address : '',
             parent_name : '',
-            contact_number : ''
+            contact_number : '',
+            class : ''
           }
       }
   },
@@ -169,7 +173,8 @@ export default {
         return this.children.firstname ? 'Edit' : 'Add New'
       },
       ...mapGetters({
-        editchildren : 'children/getEditChildren'
+		editchildren : 'children/getEditChildren',
+		allClasses : 'class_room/getAllClassRoom'
       })
   },
   methods:{

@@ -3,9 +3,9 @@
         <v-toolbar flat>
             <v-toolbar-title>Attendant Mark</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-toolbar-title>{{date}}</v-toolbar-title>
+            <v-toolbar-title>{{attendence.class_date}}</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-toolbar-title>{{ class_room}}</v-toolbar-title>
+            <v-toolbar-title>{{ classRoom.name }}</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items class="hidden-sm-and-down">
                 <v-btn flat>View Prev</v-btn>
@@ -25,7 +25,7 @@
                     >
                     <template v-slot:activator="{ on }">
                         <v-text-field
-                            v-model="date"
+                            v-model="attendence.class_date"
                             label="Donated Date"
                             prepend-icon="event"
                             readonly
@@ -33,7 +33,7 @@
                         ></v-text-field>
                     </template>
                     <v-date-picker 
-                        v-model="date" 
+                        v-model="attendence.class_date" 
                         @input="d_date = false"
                     ></v-date-picker>
                 </v-menu>
@@ -43,10 +43,10 @@
                 <v-select
                     :items="allClasses"
                     item-text ="name"
-                    item-value=""
+                    item-value="id"
                     prepend-icon="account_balance"
                     label="Donation Program"
-                    v-model="class_room"
+                    v-model="attendence.class_room"
                 ></v-select>
             </v-flex>
         </v-flex>
@@ -54,48 +54,37 @@
             <v-layout row wrap>
                 <v-flex xs12 md3>
                     <v-card  class="pa-3 text-xs-center" color="blue">
-                        <h2>Total Childrens  <b>54</b>  </h2>  
+                        <h2>Total Childrens :  <b>{{ classRoom.children.length }}</b>  </h2>  
                     </v-card>
                 </v-flex>
                 <v-spacer></v-spacer>
                 <v-flex xs3>
                     <v-card  class="pa-3 text-xs-center" color="green">
-                        <h2>Present  <b>00</b> </h2>  
+                        <h2>Present :  <b>00</b> </h2>  
                     </v-card>
                 </v-flex>
                 <v-spacer></v-spacer>
                 <v-flex xs3>
                     <v-card  class="pa-3 text-xs-center" color="orange">
-                        <h2>Absent  <b>00</b> </h2>  
+                        <h2>Absent :  <b>00</b> </h2>  
                     </v-card>
                 </v-flex>
             </v-layout>
         </v-flex>
 
         <v-flex>
-            <v-list>
-                <template v-for="item in allClasses">
+            <template v-for="item in classRoom.children">
                    <v-card class="pa-2 my-1" row>
                        <v-layout>
-                        <template>
-                            {{ item }}
-                        </template>
+                        <v-flex class="pa-3" >
+                            {{ item.name }}
+                        </v-flex>
                         <v-spacer></v-spacer>
-                        <v-btn flat>Present</v-btn>
+                        <v-btn flat @click="present(item.id)">Present</v-btn>
                         <v-btn flat>Absent</v-btn>
-                        <!-- <v-btn icon dark >
-                            Yes
-                            <v-icon>close</v-icon>
-                        </v-btn>
-                        <v-btn icon dark >
-                            No
-                            <v-icon>close</v-icon>
-                        </v-btn> -->
                     </v-layout>
                    </v-card>
                 </template>
-            </v-list>
-            </v-alert>
         </v-flex>
     </v-flex>
 </template>
@@ -104,8 +93,13 @@
     export default{
         data : () => ({
             d_date:'',
-            date : '',
-            class_room : ''
+            attendence : {
+                class_date : '',
+                class_room : '',
+                present : 0,
+                child : ''
+            },
+            classRoom : []
         }),
         computed : {
             ...mapGetters({
@@ -114,10 +108,35 @@
         },
         watch: {
             class_room (val) {
-            // when open dialog form is true, class_roomChange() called
-            //val && this.classRoomChange()
-            console.log(val)
-                
+               this.getChildren(val)
+            }
+        },
+        methods : {
+            getChildren($id){
+                this.$store.dispatch("class_room/get_class_room",$id).then(response => {
+                    this.classRoom = response
+                }, error => {
+                    console.log('Error')
+                })
+            },
+            present(id){
+                console.log(id)
+                this.attendence.child = id
+                this.attendence.present = 1
+                this.$store.dispatch("attendent/add_new_attendent",this.attendence).then(response => {
+                    
+                }, error => {
+                    console.log('Error')
+                })
+            },
+            absent(id){
+                this.attendence.child = id
+                this.attendence.present = 0
+                this.$store.dispatch("attendent/add_new_attendent",this.attendence).then(response => {
+                    
+                }, error => {
+                    console.log('Error')
+                })
             }
         }
     }

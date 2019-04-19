@@ -34,7 +34,8 @@ class AttendDateController extends Controller
                 
             ]);
             
-            AttendDate::create($data);
+            $present_date = AttendDate::create($data);
+            $present_date->children()->attach($request->child);
             return response()->json(["message"=>"Add AttendDate successfuly","responce"=>$data],201);
         }catch(Exception $e){
             return response()->json(["message"=>"Somthing want to wrong on the server."],  $e->getCode());

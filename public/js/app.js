@@ -1858,24 +1858,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       d_date: '',
-      date: '',
-      class_room: ''
+      attendence: {
+        date: '',
+        class_room: '',
+        present: 0
+      },
+      classRoom: []
     };
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
@@ -1883,10 +1876,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   })),
   watch: {
     class_room: function class_room(val) {
-      // when open dialog form is true, class_roomChange() called
-      //val && this.classRoomChange()
-      console.log(val);
+      this.getChildren(val);
     }
+  },
+  methods: {
+    getChildren: function getChildren($id) {
+      var _this = this;
+
+      this.$store.dispatch("class_room/get_class_room", $id).then(function (response) {
+        _this.classRoom = response;
+      }, function (error) {
+        console.log('Error');
+      });
+    },
+    present: function present(id) {
+      console.log(id);
+      this.$store.dispatch("attendent/add_new_attendent", this.attendence).then(function (response) {}, function (error) {
+        console.log('Error');
+      });
+    },
+    absent: function absent() {}
   }
 });
 
@@ -2040,6 +2049,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2057,7 +2069,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         gender: '',
         address: '',
         parent_name: '',
-        contact_number: ''
+        contact_number: '',
+        "class": ''
       }
     };
   },
@@ -2074,7 +2087,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return this.children.firstname ? 'Edit' : 'Add New';
     }
   }, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
-    editchildren: 'children/getEditChildren'
+    editchildren: 'children/getEditChildren',
+    allClasses: 'class_room/getAllClassRoom'
   })),
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])({
     addchildren: 'children/add_new_children',
@@ -38791,7 +38805,7 @@ var render = function() {
           _vm._v(" "),
           _c("v-spacer"),
           _vm._v(" "),
-          _c("v-toolbar-title", [_vm._v(_vm._s(_vm.class_room))]),
+          _c("v-toolbar-title", [_vm._v(_vm._s(_vm.classRoom.name))]),
           _vm._v(" "),
           _c("v-spacer"),
           _vm._v(" "),
@@ -38896,7 +38910,7 @@ var render = function() {
                 attrs: {
                   items: _vm.allClasses,
                   "item-text": "name",
-                  "item-value": "",
+                  "item-value": "id",
                   "prepend-icon": "account_balance",
                   label: "Donation Program"
                 },
@@ -38936,8 +38950,10 @@ var render = function() {
                         },
                         [
                           _c("h2", [
-                            _vm._v("Total Childrens  "),
-                            _c("b", [_vm._v("54")])
+                            _vm._v("Total Childrens :  "),
+                            _c("b", [
+                              _vm._v(_vm._s(_vm.classRoom.children.length))
+                            ])
                           ])
                         ]
                       )
@@ -38959,7 +38975,7 @@ var render = function() {
                         },
                         [
                           _c("h2", [
-                            _vm._v("Present  "),
+                            _vm._v("Present :  "),
                             _c("b", [_vm._v("00")])
                           ])
                         ]
@@ -38982,7 +38998,7 @@ var render = function() {
                         },
                         [
                           _c("h2", [
-                            _vm._v("Absent  "),
+                            _vm._v("Absent :  "),
                             _c("b", [_vm._v("00")])
                           ])
                         ]
@@ -39001,48 +39017,49 @@ var render = function() {
       _c(
         "v-flex",
         [
-          _c(
-            "v-list",
-            [
-              _vm._l(_vm.allClasses, function(item) {
-                return [
+          _vm._l(_vm.classRoom.children, function(item) {
+            return [
+              _c(
+                "v-card",
+                { staticClass: "pa-2 my-1", attrs: { row: "" } },
+                [
                   _c(
-                    "v-card",
-                    { staticClass: "pa-2 my-1", attrs: { row: "" } },
+                    "v-layout",
                     [
+                      _c("v-flex", { staticClass: "pa-3" }, [
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(item.name) +
+                            "\n                    "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("v-spacer"),
+                      _vm._v(" "),
                       _c(
-                        "v-layout",
-                        [
-                          [
-                            _vm._v(
-                              "\n                        " +
-                                _vm._s(item) +
-                                "\n                    "
-                            )
-                          ],
-                          _vm._v(" "),
-                          _c("v-spacer"),
-                          _vm._v(" "),
-                          _c("v-btn", { attrs: { flat: "" } }, [
-                            _vm._v("Present")
-                          ]),
-                          _vm._v(" "),
-                          _c("v-btn", { attrs: { flat: "" } }, [
-                            _vm._v("Absent")
-                          ])
-                        ],
-                        2
-                      )
+                        "v-btn",
+                        {
+                          attrs: { flat: "" },
+                          on: {
+                            click: function($event) {
+                              return _vm.present(item.id)
+                            }
+                          }
+                        },
+                        [_vm._v("Present")]
+                      ),
+                      _vm._v(" "),
+                      _c("v-btn", { attrs: { flat: "" } }, [_vm._v("Absent")])
                     ],
                     1
                   )
-                ]
-              })
-            ],
-            2
-          )
+                ],
+                1
+              )
+            ]
+          })
         ],
-        1
+        2
       )
     ],
     1
@@ -39280,11 +39297,14 @@ var render = function() {
                           _vm._v(" "),
                           _c(
                             "v-flex",
-                            { attrs: { xs6: "" } },
+                            { attrs: { xs12: "", md6: "" } },
                             [
-                              _c("v-text-field", {
+                              _c("v-select", {
                                 attrs: {
-                                  "prepend-icon": "smartphone",
+                                  items: _vm.allClasses,
+                                  "item-text": "name",
+                                  "item-value": "id",
+                                  "prepend-icon": "account_balance",
                                   label: "Class Room"
                                 },
                                 model: {
@@ -82637,6 +82657,169 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/ControlPanel/Attendents/AttendentStore/actions.js":
+/*!***********************************************************************************!*\
+  !*** ./resources/js/components/ControlPanel/Attendents/AttendentStore/actions.js ***!
+  \***********************************************************************************/
+/*! exports provided: add_new_attendent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add_new_attendent", function() { return add_new_attendent; });
+// get all childrens in database
+// export const set_childrens = ({commit}) => {
+//     return new Promise((resolve, reject) => {
+//         axios.get('api/childrens').then(response => {
+//             // http success, call the mutator and change something in state
+//             commit('set_all_childrens', response.data.data)
+//             resolve(response);  // Let the calling function know that http is done. You may send some data back
+//         }, error => {
+//             // http failed, let the calling function know that action did not work out
+//             reject(error);
+//         })
+//     })
+// }
+// add new children to the database
+var add_new_attendent = function add_new_attendent(_ref, item) {
+  var dispatch = _ref.dispatch;
+  return axios.post('api/attendentd', item).then(function (response) {
+    console.log(response); // dispatch('set_message',{message:response.data.message, type:'success'},{root:true})
+  })["catch"](function (error) {
+    console.log(error.response); // dispatch('set_message',{message:error.response.data.message, type:'error'},{root:true})
+  });
+}; // set edit children array
+// export const set_edit_children = ({commit}, children={}) => {
+//     return commit('set_update_children_to_form',children)
+// }
+// // update existing children in database
+// export const update_children = ({dispatch}, children) => {
+//     return new Promise((resolve, reject) => {
+//         axios.post('api/childrens/update',children).then(response => {
+//             // http success, call the mutator and change something in state
+//             dispatch('set_childrens')
+//             dispatch('set_message',{message:response.data.message, type:'success'},{root:true})
+//             resolve(response);  // Let the calling function know that http is done. You may send some data back
+//         }, error => {
+//             // http failed, let the calling function know that action did not work out
+//             dispatch('set_message',{message:error.response.data.message, type:'error'},{root:true})
+//             reject(error);
+//         })
+//     })
+// }
+// // set children details
+// export const set_children_details = ({commit}, id) => {
+//     return new Promise((resolve, reject) => {
+//         axios.get('api/childrens/'+id).then(response => {
+//             // http success, call the mutator and change something in state
+//             commit('set_active_children',response.data.children)
+//             resolve(response);  // Let the calling function know that http is done. You may send some data back
+//         }, error => {
+//             // http failed, let the calling function know that action did not work out
+//             dispatch('set_message',{message:error.response.data.message, type:'error'},{root:true})
+//             reject(error);
+//         })
+//     })
+// }
+
+/***/ }),
+
+/***/ "./resources/js/components/ControlPanel/Attendents/AttendentStore/getters.js":
+/*!***********************************************************************************!*\
+  !*** ./resources/js/components/ControlPanel/Attendents/AttendentStore/getters.js ***!
+  \***********************************************************************************/
+/*! exports provided: getAllChildrens, getEditChildren */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAllChildrens", function() { return getAllChildrens; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getEditChildren", function() { return getEditChildren; });
+/* harmony import */ var _state__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./state */ "./resources/js/components/ControlPanel/Attendents/AttendentStore/state.js");
+ // get all childrens array
+
+var getAllChildrens = function getAllChildrens(state) {
+  return state.allChildrens;
+}; // get edit children
+
+var getEditChildren = function getEditChildren(state) {
+  return state.editChildren;
+};
+
+/***/ }),
+
+/***/ "./resources/js/components/ControlPanel/Attendents/AttendentStore/index.js":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/components/ControlPanel/Attendents/AttendentStore/index.js ***!
+  \*********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _state__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./state */ "./resources/js/components/ControlPanel/Attendents/AttendentStore/state.js");
+/* harmony import */ var _mutations__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./mutations */ "./resources/js/components/ControlPanel/Attendents/AttendentStore/mutations.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./actions */ "./resources/js/components/ControlPanel/Attendents/AttendentStore/actions.js");
+/* harmony import */ var _getters__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./getters */ "./resources/js/components/ControlPanel/Attendents/AttendentStore/getters.js");
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  namespaced: true,
+  state: _state__WEBPACK_IMPORTED_MODULE_0__["default"],
+  getters: _getters__WEBPACK_IMPORTED_MODULE_3__,
+  mutations: _mutations__WEBPACK_IMPORTED_MODULE_1__,
+  actions: _actions__WEBPACK_IMPORTED_MODULE_2__
+});
+
+/***/ }),
+
+/***/ "./resources/js/components/ControlPanel/Attendents/AttendentStore/mutations.js":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/components/ControlPanel/Attendents/AttendentStore/mutations.js ***!
+  \*************************************************************************************/
+/*! exports provided: set_all_childrens, set_update_children_to_form, set_active_children */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "set_all_childrens", function() { return set_all_childrens; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "set_update_children_to_form", function() { return set_update_children_to_form; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "set_active_children", function() { return set_active_children; });
+// set all childrens to the allchildrens Array
+var set_all_childrens = function set_all_childrens(state, childrens) {
+  return state.allChildrens = childrens;
+}; // set update children to form
+
+var set_update_children_to_form = function set_update_children_to_form(state, children) {
+  return state.editChildren = children;
+}; // set active children information
+
+var set_active_children = function set_active_children(state, children) {
+  //console.log(state.allchildrens.find( item => item.id === children.id ) )
+  return state.activeChildren = children;
+};
+
+/***/ }),
+
+/***/ "./resources/js/components/ControlPanel/Attendents/AttendentStore/state.js":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/components/ControlPanel/Attendents/AttendentStore/state.js ***!
+  \*********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  allChildrens: [],
+  editChildren: {},
+  activeChildren: {}
+});
+
+/***/ }),
+
 /***/ "./resources/js/components/ControlPanel/Childrens/ChildStore/actions.js":
 /*!******************************************************************************!*\
   !*** ./resources/js/components/ControlPanel/Childrens/ChildStore/actions.js ***!
@@ -82676,7 +82859,9 @@ var add_new_children = function add_new_children(_ref2, children) {
       root: true
     });
     dispatch('set_childrens');
+    console.log(response);
   })["catch"](function (error) {
+    console.log(error.response);
     dispatch('set_message', {
       message: error.response.data.message,
       type: 'error'
@@ -83047,7 +83232,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!**********************************************************************************!*\
   !*** ./resources/js/components/ControlPanel/ClassRoom/ClassRoomStore/actions.js ***!
   \**********************************************************************************/
-/*! exports provided: set_toggle_form, set_class_rooms, add_new_class_room, set_edit_class_room, update_class_room */
+/*! exports provided: set_toggle_form, set_class_rooms, add_new_class_room, set_edit_class_room, update_class_room, get_class_room */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -83057,6 +83242,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add_new_class_room", function() { return add_new_class_room; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "set_edit_class_room", function() { return set_edit_class_room; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update_class_room", function() { return update_class_room; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "get_class_room", function() { return get_class_room; });
 // set form visibility
 var set_toggle_form = function set_toggle_form(_ref) {
   var commit = _ref.commit;
@@ -83125,7 +83311,21 @@ var update_class_room = function update_class_room(_ref5, class_room) {
         root: true
       });
       reject(error);
-      console.log(error.response);
+    });
+  });
+}; // update existing class_room in database
+
+var get_class_room = function get_class_room(_ref6, id) {
+  var dispatch = _ref6.dispatch;
+  return new Promise(function (resolve, reject) {
+    axios.get('api/class_rooms/' + id).then(function (response) {
+      // http success, call the mutator and change something in state
+      // dispatch('set_message',{message:response.data.message, type:'success'},{root:true})
+      resolve(response.data); // Let the calling function know that http is done. You may send some data back
+    }, function (error) {
+      // http failed, let the calling function know that action did not work out
+      // dispatch('set_message',{message:error.response.data.message, type:'error'},{root:true})
+      reject(error);
     });
   });
 };
@@ -83895,9 +84095,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _getters__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./getters */ "./resources/js/store/getters.js");
 /* harmony import */ var _components_ControlPanel_Childrens_ChildStore__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/ControlPanel/Childrens/ChildStore */ "./resources/js/components/ControlPanel/Childrens/ChildStore/index.js");
 /* harmony import */ var _components_ControlPanel_ClassRoom_ClassRoomStore__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../components/ControlPanel/ClassRoom/ClassRoomStore */ "./resources/js/components/ControlPanel/ClassRoom/ClassRoomStore/index.js");
+/* harmony import */ var _components_ControlPanel_Attendents_AttendentStore__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../components/ControlPanel/Attendents/AttendentStore */ "./resources/js/components/ControlPanel/Attendents/AttendentStore/index.js");
 
 
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
 
 
 
@@ -83911,7 +84113,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
   actions: _actions__WEBPACK_IMPORTED_MODULE_4__,
   modules: {
     children: _components_ControlPanel_Childrens_ChildStore__WEBPACK_IMPORTED_MODULE_6__["default"],
-    class_room: _components_ControlPanel_ClassRoom_ClassRoomStore__WEBPACK_IMPORTED_MODULE_7__["default"]
+    class_room: _components_ControlPanel_ClassRoom_ClassRoomStore__WEBPACK_IMPORTED_MODULE_7__["default"],
+    attendent: _components_ControlPanel_Attendents_AttendentStore__WEBPACK_IMPORTED_MODULE_8__["default"]
   }
 }));
 

@@ -44,7 +44,21 @@ export const update_class_room = ({dispatch}, class_room) => {
             // http failed, let the calling function know that action did not work out
             dispatch('set_message',{message:error.response.data.message, type:'error'},{root:true})
             reject(error);
-            console.log(error.response)
+        })
+    })
+}
+
+// update existing class_room in database
+export const get_class_room = ({dispatch}, id) => {
+    return new Promise((resolve, reject) => {
+        axios.get('api/class_rooms/'+id).then(response => {
+            // http success, call the mutator and change something in state
+            // dispatch('set_message',{message:response.data.message, type:'success'},{root:true})
+            resolve(response.data);  // Let the calling function know that http is done. You may send some data back
+        }, error => {
+            // http failed, let the calling function know that action did not work out
+            // dispatch('set_message',{message:error.response.data.message, type:'error'},{root:true})
+            reject(error);
         })
     })
 }

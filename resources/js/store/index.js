@@ -10,6 +10,7 @@ import * as getters from './getters'
 
 import children from '../components/ControlPanel/Childrens/ChildStore'
 import class_room from '../components/ControlPanel/ClassRoom/ClassRoomStore'
+import attendent from '../components/ControlPanel/Attendents/AttendentStore'
 
 
 export default new Vuex.Store({
@@ -19,6 +20,7 @@ export default new Vuex.Store({
     actions,
     modules : {
         children,
-        class_room
+        class_room,
+        attendent
     }
 });
