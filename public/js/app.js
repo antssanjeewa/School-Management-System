@@ -1863,19 +1863,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   data: function data() {
     return {
       d_date: '',
+      total_childs: 0,
       attendence: {
-        date: '',
+        class_date: new Date().toISOString().substr(0, 10),
         class_room: '',
-        present: 0
+        present: 0,
+        child: ''
       },
-      classRoom: []
+      classRoom: {}
     };
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
     allClasses: 'class_room/getAllClassRoom'
   })),
   watch: {
-    class_room: function class_room(val) {
+    'attendence.class_room': function attendenceClass_room(val) {
       this.getChildren(val);
     }
   },
@@ -1885,17 +1887,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       this.$store.dispatch("class_room/get_class_room", $id).then(function (response) {
         _this.classRoom = response;
+        _this.total_childs = response.children.length;
       }, function (error) {
         console.log('Error');
       });
     },
     present: function present(id) {
       console.log(id);
+      this.attendence.child = id;
+      this.attendence.present = 1;
       this.$store.dispatch("attendent/add_new_attendent", this.attendence).then(function (response) {}, function (error) {
         console.log('Error');
       });
     },
-    absent: function absent() {}
+    absent: function absent(id) {
+      this.attendence.child = id;
+      this.attendence.present = 0;
+      this.$store.dispatch("attendent/add_new_attendent", this.attendence).then(function (response) {}, function (error) {
+        console.log('Error');
+      });
+    }
   }
 });
 
@@ -3090,7 +3101,25 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _ControlPanel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ControlPanel */ "./resources/js/components/ControlPanel/index.vue");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _ControlPanel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ControlPanel */ "./resources/js/components/ControlPanel/index.vue");
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3098,9 +3127,27 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      snackbar: false
+    };
+  },
+  props: {
+    source: String
+  },
+  watch: {
+    message: function message(val) {
+      this.snackbar = true;
+    }
+  },
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
+    // Get message for Snackbar
+    message: 'getMessage'
+  })),
   components: {
-    'admin-board': _ControlPanel__WEBPACK_IMPORTED_MODULE_0__["default"]
+    'admin-board': _ControlPanel__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   created: function created() {
     this.$store.dispatch("class_room/set_class_rooms").then(function (response) {}, function (error) {});
@@ -38801,7 +38848,7 @@ var render = function() {
           _vm._v(" "),
           _c("v-spacer"),
           _vm._v(" "),
-          _c("v-toolbar-title", [_vm._v(_vm._s(_vm.date))]),
+          _c("v-toolbar-title", [_vm._v(_vm._s(_vm.attendence.class_date))]),
           _vm._v(" "),
           _c("v-spacer"),
           _vm._v(" "),
@@ -38855,11 +38902,11 @@ var render = function() {
                                   readonly: ""
                                 },
                                 model: {
-                                  value: _vm.date,
+                                  value: _vm.attendence.class_date,
                                   callback: function($$v) {
-                                    _vm.date = $$v
+                                    _vm.$set(_vm.attendence, "class_date", $$v)
                                   },
-                                  expression: "date"
+                                  expression: "attendence.class_date"
                                 }
                               },
                               on
@@ -38886,11 +38933,11 @@ var render = function() {
                       }
                     },
                     model: {
-                      value: _vm.date,
+                      value: _vm.attendence.class_date,
                       callback: function($$v) {
-                        _vm.date = $$v
+                        _vm.$set(_vm.attendence, "class_date", $$v)
                       },
-                      expression: "date"
+                      expression: "attendence.class_date"
                     }
                   })
                 ],
@@ -38915,11 +38962,11 @@ var render = function() {
                   label: "Donation Program"
                 },
                 model: {
-                  value: _vm.class_room,
+                  value: _vm.attendence.class_room,
                   callback: function($$v) {
-                    _vm.class_room = $$v
+                    _vm.$set(_vm.attendence, "class_room", $$v)
                   },
-                  expression: "class_room"
+                  expression: "attendence.class_room"
                 }
               })
             ],
@@ -38929,7 +38976,7 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _vm.class_room
+      _vm.attendence.class_room
         ? _c(
             "v-flex",
             { attrs: { "pa-3": "" } },
@@ -38951,9 +38998,7 @@ var render = function() {
                         [
                           _c("h2", [
                             _vm._v("Total Childrens :  "),
-                            _c("b", [
-                              _vm._v(_vm._s(_vm.classRoom.children.length))
-                            ])
+                            _c("b", [_vm._v(_vm._s(_vm.total_childs))])
                           ])
                         ]
                       )
@@ -39049,7 +39094,18 @@ var render = function() {
                         [_vm._v("Present")]
                       ),
                       _vm._v(" "),
-                      _c("v-btn", { attrs: { flat: "" } }, [_vm._v("Absent")])
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { flat: "" },
+                          on: {
+                            click: function($event) {
+                              return _vm.absent(item.id)
+                            }
+                          }
+                        },
+                        [_vm._v("Absent")]
+                      )
                     ],
                     1
                   )
@@ -40690,7 +40746,50 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container-fluid" }, [_c("admin-board")], 1)
+  return _c(
+    "div",
+    { staticClass: "container-fluid" },
+    [
+      _c("admin-board"),
+      _vm._v(" "),
+      _c(
+        "v-snackbar",
+        {
+          attrs: {
+            timeout: 4000,
+            top: true,
+            color: _vm.message.type,
+            "multi-line": true
+          },
+          model: {
+            value: _vm.snackbar,
+            callback: function($$v) {
+              _vm.snackbar = $$v
+            },
+            expression: "snackbar"
+          }
+        },
+        [
+          _vm._v("\n    " + _vm._s(_vm.message.message) + "\n    "),
+          _c(
+            "v-btn",
+            {
+              attrs: { color: "white", flat: "" },
+              on: {
+                click: function($event) {
+                  _vm.snackbar = false
+                }
+              }
+            },
+            [_c("v-icon", [_vm._v("close")])],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -82661,43 +82760,57 @@ __webpack_require__.r(__webpack_exports__);
 /*!***********************************************************************************!*\
   !*** ./resources/js/components/ControlPanel/Attendents/AttendentStore/actions.js ***!
   \***********************************************************************************/
-/*! exports provided: add_new_attendent */
+/*! exports provided: set_attend_dates, add_new_attendent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "set_attend_dates", function() { return set_attend_dates; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add_new_attendent", function() { return add_new_attendent; });
-// get all childrens in database
-// export const set_childrens = ({commit}) => {
-//     return new Promise((resolve, reject) => {
-//         axios.get('api/childrens').then(response => {
-//             // http success, call the mutator and change something in state
-//             commit('set_all_childrens', response.data.data)
-//             resolve(response);  // Let the calling function know that http is done. You may send some data back
-//         }, error => {
-//             // http failed, let the calling function know that action did not work out
-//             reject(error);
-//         })
-//     })
-// }
-// add new children to the database
-var add_new_attendent = function add_new_attendent(_ref, item) {
-  var dispatch = _ref.dispatch;
-  return axios.post('api/attendentd', item).then(function (response) {
-    console.log(response); // dispatch('set_message',{message:response.data.message, type:'success'},{root:true})
-  })["catch"](function (error) {
-    console.log(error.response); // dispatch('set_message',{message:error.response.data.message, type:'error'},{root:true})
+// get all attend_dates in database
+var set_attend_dates = function set_attend_dates(_ref) {
+  var commit = _ref.commit;
+  return new Promise(function (resolve, reject) {
+    axios.get('api/attend_dates').then(function (response) {
+      // http success, call the mutator and change something in state
+      commit('set_all_attend_dates', response.data.data);
+      resolve(response); // Let the calling function know that http is done. You may send some data back
+    }, function (error) {
+      // http failed, let the calling function know that action did not work out
+      reject(error);
+    });
   });
-}; // set edit children array
-// export const set_edit_children = ({commit}, children={}) => {
-//     return commit('set_update_children_to_form',children)
+}; // add new attend_date to the database
+
+var add_new_attendent = function add_new_attendent(_ref2, item) {
+  var dispatch = _ref2.dispatch;
+  return axios.post('api/attend_dates', item).then(function (response) {
+    console.log(response);
+    dispatch('set_message', {
+      message: response.data.message,
+      type: 'success'
+    }, {
+      root: true
+    });
+  })["catch"](function (error) {
+    console.log(error.response);
+    dispatch('set_message', {
+      message: error.response.data.message,
+      type: 'error'
+    }, {
+      root: true
+    });
+  });
+}; // set edit attend_date array
+// export const set_edit_attend_date = ({commit}, attend_date={}) => {
+//     return commit('set_update_attend_date_to_form',attend_date)
 // }
-// // update existing children in database
-// export const update_children = ({dispatch}, children) => {
+// // update existing attend_date in database
+// export const update_attend_date = ({dispatch}, attend_date) => {
 //     return new Promise((resolve, reject) => {
-//         axios.post('api/childrens/update',children).then(response => {
+//         axios.post('api/attend_dates/update',attend_date).then(response => {
 //             // http success, call the mutator and change something in state
-//             dispatch('set_childrens')
+//             dispatch('set_attend_dates')
 //             dispatch('set_message',{message:response.data.message, type:'success'},{root:true})
 //             resolve(response);  // Let the calling function know that http is done. You may send some data back
 //         }, error => {
@@ -82707,12 +82820,12 @@ var add_new_attendent = function add_new_attendent(_ref, item) {
 //         })
 //     })
 // }
-// // set children details
-// export const set_children_details = ({commit}, id) => {
+// // set attend_date details
+// export const set_attend_date_details = ({commit}, id) => {
 //     return new Promise((resolve, reject) => {
-//         axios.get('api/childrens/'+id).then(response => {
+//         axios.get('api/attend_dates/'+id).then(response => {
 //             // http success, call the mutator and change something in state
-//             commit('set_active_children',response.data.children)
+//             commit('set_active_attend_date',response.data.attend_date)
 //             resolve(response);  // Let the calling function know that http is done. You may send some data back
 //         }, error => {
 //             // http failed, let the calling function know that action did not work out
@@ -82779,26 +82892,20 @@ __webpack_require__.r(__webpack_exports__);
 /*!*************************************************************************************!*\
   !*** ./resources/js/components/ControlPanel/Attendents/AttendentStore/mutations.js ***!
   \*************************************************************************************/
-/*! exports provided: set_all_childrens, set_update_children_to_form, set_active_children */
+/*! exports provided: set_all_attend_dates, set_update_attend_date_to_form */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "set_all_childrens", function() { return set_all_childrens; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "set_update_children_to_form", function() { return set_update_children_to_form; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "set_active_children", function() { return set_active_children; });
-// set all childrens to the allchildrens Array
-var set_all_childrens = function set_all_childrens(state, childrens) {
-  return state.allChildrens = childrens;
-}; // set update children to form
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "set_all_attend_dates", function() { return set_all_attend_dates; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "set_update_attend_date_to_form", function() { return set_update_attend_date_to_form; });
+// set all attend_dates to the allattend_dates Array
+var set_all_attend_dates = function set_all_attend_dates(state, attend_dates) {
+  return state.allAttendDates = attend_dates;
+}; // set update attend_date to form
 
-var set_update_children_to_form = function set_update_children_to_form(state, children) {
-  return state.editChildren = children;
-}; // set active children information
-
-var set_active_children = function set_active_children(state, children) {
-  //console.log(state.allchildrens.find( item => item.id === children.id ) )
-  return state.activeChildren = children;
+var set_update_attend_date_to_form = function set_update_attend_date_to_form(state, attend_date) {
+  return state.editAttendDate = attend_date;
 };
 
 /***/ }),
@@ -82813,9 +82920,8 @@ var set_active_children = function set_active_children(state, children) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
-  allChildrens: [],
-  editChildren: {},
-  activeChildren: {}
+  allAttendDates: [],
+  editAttendDate: {}
 });
 
 /***/ }),

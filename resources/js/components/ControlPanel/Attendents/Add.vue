@@ -50,11 +50,11 @@
                 ></v-select>
             </v-flex>
         </v-flex>
-        <v-flex pa-3 v-if="class_room">
+        <v-flex pa-3 v-if="attendence.class_room">
             <v-layout row wrap>
                 <v-flex xs12 md3>
                     <v-card  class="pa-3 text-xs-center" color="blue">
-                        <h2>Total Childrens :  <b>{{ classRoom.children.length }}</b>  </h2>  
+                        <h2>Total Childrens :  <b>{{ total_childs }}</b>  </h2>  
                     </v-card>
                 </v-flex>
                 <v-spacer></v-spacer>
@@ -81,7 +81,7 @@
                         </v-flex>
                         <v-spacer></v-spacer>
                         <v-btn flat @click="present(item.id)">Present</v-btn>
-                        <v-btn flat>Absent</v-btn>
+                        <v-btn flat @click="absent(item.id)">Absent</v-btn>
                     </v-layout>
                    </v-card>
                 </template>
@@ -93,13 +93,14 @@
     export default{
         data : () => ({
             d_date:'',
+            total_childs : 0,
             attendence : {
-                class_date : '',
+                class_date : new Date().toISOString().substr(0, 10),
                 class_room : '',
                 present : 0,
                 child : ''
             },
-            classRoom : []
+            classRoom : {}
         }),
         computed : {
             ...mapGetters({
@@ -107,14 +108,15 @@
             })
         },
         watch: {
-            class_room (val) {
-               this.getChildren(val)
+            'attendence.class_room' : function (val) {
+                this.getChildren(val)
             }
         },
         methods : {
             getChildren($id){
                 this.$store.dispatch("class_room/get_class_room",$id).then(response => {
                     this.classRoom = response
+                    this.total_childs = response.children.length
                 }, error => {
                     console.log('Error')
                 })

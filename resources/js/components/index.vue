@@ -18,34 +18,35 @@
 </template>
 
 <script>
-    import admin from './ControlPanel'
-    export default {
-        data: () => ({
-            snackbar: false,
-            }),
-            props: {
-            source: String
-            },
-            watch : {
-                message (val) {
-                    this.snackbar = true
-                }
-            },
-            computed : {
-                ...mapGetters({
-                    // Get message for Snackbar
-                    message : 'getMessage',
-                })
-            },
-        components : {
-            'admin-board' : admin
+import { mapGetters } from 'vuex'
+import admin from './ControlPanel'
+export default {
+    data: () => ({
+        snackbar: false,
+        }),
+        props: {
+        source: String
         },
-        created(){
-          this.$store.dispatch("class_room/set_class_rooms").then(response => {
-            
-          }, error => {
-            
-          })
+        watch : {
+            message (val) {
+                this.snackbar = true
+            }
         },
-    }
+        computed : {
+            ...mapGetters({
+                // Get message for Snackbar
+                message : 'getMessage',
+            })
+        },
+    components : {
+        'admin-board' : admin
+    },
+    created(){
+        this.$store.dispatch("class_room/set_class_rooms").then(response => {
+        
+        }, error => {
+        
+        })
+    },
+}
 </script>

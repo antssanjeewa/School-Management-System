@@ -10,10 +10,10 @@ class AttendDate extends Model
     use SoftDeletes;
     
     protected $fillable = [
-
+        'class_date'
     ];
 
     public function children(){
-        return $this->belongsToMany('App\Model\Children');
+        return $this->belongsToMany('App\Model\Children')->withPivot('present');;
     }
 }
